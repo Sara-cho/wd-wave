@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WD WAVE</title>
+</head>
+<body>
+<script>
+// #client=CUST_ID 가 있으면 WD_WAVE_v2_new.html 로 해시 그대로 전달
+var h = location.hash;
+if(h && h.startsWith('#client=')) {
+  location.replace('WD_WAVE_v2_new.html' + h);
+} else {
+  location.replace('WD_WAVE_v2_new.html');
+}
+</script>
+</body>
+</html>
