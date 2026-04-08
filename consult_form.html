@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>간단 상담 신청 | WD WAVE</title>
+<!-- OG 태그: 카카오톡 공유 미리보기 -->
+<meta property="og:title" content="간단 상담 신청 | WD WAVE">
+<meta property="og:description" content="1분 입력 후 담당 FP가 확인하고 바로 연락드립니다">
+<meta property="og:image" content="https://sara-cho.github.io/wd-wave/og_image.png">
+<meta property="og:url" content="https://sara-cho.github.io/wd-wave/consult_form.html">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',sans-serif;background:#F7F8FC;min-height:100vh;}
+.wrap{max-width:480px;margin:0 auto;padding:0 0 40px;}
+
+/* 헤더 */
+.hd{background:linear-gradient(135deg,#1A1A3E,#4A3F7A);padding:28px 20px 36px;border-radius:0 0 24px 24px;}
+.hd-brand{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:10px;letter-spacing:1px;}
+.hd-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;}
+.hd-desc{font-size:13px;color:rgba(255,255,255,.8);line-height:1.8;}
+
+/* 카드 */
+.card{background:#fff;border:1.5px solid #E8E8F4;border-radius:14px;padding:18px;margin:12px 16px 0;}
+.card-ttl{font-size:13px;font-weight:800;color:#1A1A2E;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+
+/* 입력 */
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:11px;font-weight:700;color:#64748b;margin-bottom:5px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:11px 13px;border:1.5px solid #e2e8f0;border-radius:10px;
+  font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;
+  background:#fafbfc;color:#1A1A2E;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#4A3F7A;background:#fff;}
+.field.required label::after{content:' *';color:#ef4444;}
+.field textarea{resize:none;}
+.hint{font-size:10px;color:#94a3b8;margin-top:3px;}
+
+/* 주민번호 */
+.rr-row{display:flex;align-items:center;gap:8px;}
+.rr-row input{flex:1;}
+.rr-sep{font-size:18px;font-weight:800;color:#cbd5e1;flex-shrink:0;}
+.rr-back{flex:1;position:relative;}
+.rr-back input{width:100%;letter-spacing:3px;}
+.mask-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:13px;cursor:pointer;color:#94a3b8;}
+
+/* 상담 목적 */
+.purpose-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.purpose-btn{padding:11px 8px;border:1.5px solid #e2e8f0;border-radius:10px;
+  font-size:12px;font-weight:700;color:#64748b;background:#fff;cursor:pointer;
+  font-family:'Noto Sans KR',sans-serif;text-align:center;transition:all .15s;line-height:1.4;}
+.purpose-btn.on{background:#4A3F7A;color:#fff;border-color:#4A3F7A;}
+.purpose-btn:active{transform:scale(.97);}
+
+/* 제출 버튼 */
+.submit-btn{display:block;width:calc(100% - 32px);margin:16px 16px 0;
+  padding:16px;background:linear-gradient(135deg,#1A1A3E,#4A3F7A);
+  color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:800;
+  cursor:pointer;font-family:'Noto Sans KR',sans-serif;letter-spacing:.3px;}
+.submit-btn:active{opacity:.9;transform:scale(.99);}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* 완료 화면 */
+.done{display:none;text-align:center;padding:48px 20px;}
+.done-ico{font-size:56px;margin-bottom:16px;}
+.done-title{font-size:20px;font-weight:800;color:#1A1A2E;margin-bottom:8px;}
+.done-msg{font-size:13px;color:#64748b;line-height:1.8;}
+
+/* 알림 */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);
+  background:#1A1A2E;color:#fff;padding:10px 20px;border-radius:20px;
+  font-size:13px;font-weight:700;z-index:999;opacity:0;transition:all .3s;pointer-events:none;}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* 필수 안내 */
+.req-note{font-size:11px;color:#94a3b8;text-align:right;margin:8px 16px 0;}
+</style>
+</head>
+<body>
+
+<div id="form-view">
+  <div class="wrap">
+    <div class="hd">
+      <div class="hd-brand">🌊 WD WAVE | 우리동네보험지킴이</div>
+      <div class="hd-title">간단 상담 신청</div>
+      <div class="hd-desc">기본 인적 사항을 입력해주시면<br>현재 가입 내역 확인 및 보장 점검을 위해<br>확인 후 전화드리겠습니다.<br><br>디테일한 상담은 전화로 편하게 안내드리겠습니다.</div>
+    </div>
+
+    <div class="req-note">* 필수 입력</div>
+
+    <!-- 기본 정보 -->
+    <div class="card">
+      <div class="card-ttl">👤 기본 정보</div>
+
+      <div class="field required">
+        <label>이름</label>
+        <input type="text" id="f-name" placeholder="홍길동" maxlength="20">
+      </div>
+
+      <div class="field required">
+        <label>주민등록번호</label>
+        <div class="rr-row">
+          <input type="text" id="rr-front" placeholder="000000" maxlength="6"
+            inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'');if(this.value.length===6)document.getElementById('rr-back').focus();">
+          <div class="rr-sep">—</div>
+          <div class="rr-back">
+            <input type="password" id="rr-back" placeholder="●●●●●●●" maxlength="7"
+              inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'');">
+          </div>
+        </div>
+        <div class="hint">※ 보장 분석 및 상담 진행을 위한 정보이며 상담 목적 외 사용되지 않습니다</div>
+      </div>
+
+      <div class="field required">
+        <label>연락처</label>
+        <input type="tel" id="f-phone" placeholder="010-0000-0000" maxlength="13"
+          oninput="this.value=this.value.replace(/[^0-9]/g,'').replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3').substring(0,13);">
+      </div>
+
+      <div class="field">
+        <label>직업</label>
+        <select id="f-job">
+          <option value="">선택해주세요</option>
+          <option>직장인 (회사원)</option>
+          <option>자영업자</option>
+          <option>공무원</option>
+          <option>교사 / 교직원</option>
+          <option>의료직</option>
+          <option>전문직 (변호사·회계사 등)</option>
+          <option>주부</option>
+          <option>학생</option>
+          <option>프리랜서</option>
+          <option>무직</option>
+          <option>기타</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>주소 (시/군/구)</label>
+        <input type="text" id="f-addr" placeholder="예) 대전시 서구" maxlength="30">
+      </div>
+    </div>
+
+    <!-- 상담 목적 -->
+    <div class="card">
+      <div class="card-ttl">📋 상담 목적 <span style="font-size:10px;font-weight:600;color:#94a3b8;">(필수·복수 선택 가능)</span></div>
+      <div class="purpose-grid">
+        <button class="purpose-btn" onclick="togglePurpose(this)">🔍 보장 분석 상담</button>
+        <button class="purpose-btn" onclick="togglePurpose(this)">💰 보험금 청구 문의</button>
+        <button class="purpose-btn" onclick="togglePurpose(this)">📄 상품 상담</button>
+        <button class="purpose-btn" onclick="togglePurpose(this)">🚗 자동차보험 상담</button>
+        <button class="purpose-btn" onclick="togglePurpose(this)">🔎 기존 보험 점검</button>
+        <button class="purpose-btn" onclick="togglePurpose(this)">💬 기타 상담</button>
+      </div>
+    </div>
+
+    <!-- 문의 내용 -->
+    <div class="card">
+      <div class="card-ttl">📝 간단 문의 내용 <span style="font-size:10px;font-weight:600;color:#94a3b8;">(선택)</span></div>
+      <div class="field">
+        <textarea id="f-memo" rows="4" placeholder="궁금하신 내용을 간단히 적어주세요."></textarea>
+      </div>
+    </div>
+
+    <div style="margin:14px 16px 0;background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:12px;padding:14px;">
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+        <input type="checkbox" id="agree-check" style="width:18px;height:18px;margin-top:2px;accent-color:#4A3F7A;flex-shrink:0;">
+        <span style="font-size:12px;color:#1A1A2E;line-height:1.7;">
+          <b>개인정보 수집 및 이용에 동의합니다.</b><br>
+          보장 분석 및 상담 진행을 위한 정보이며<br>상담 목적 외 사용되지 않습니다.
+        </span>
+      </label>
+    </div>
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">✉️ 상담 신청하기</button>
+
+    <div style="text-align:center;margin-top:14px;font-size:10px;color:#cbd5e1;padding-bottom:20px;">
+본 신청서는 보장 분석 및 상담 진행을 위한 목적으로만 수집됩니다.<br>입력하신 정보는 상담 목적 외 사용되지 않으며 제3자에게 제공되지 않습니다.<br>수집 항목: 이름, 주민등록번호, 연락처, 직업, 주소, 상담 목적
+    </div>
+  </div>
+</div>
+
+<!-- 완료 화면 -->
+<div id="done-view" style="display:none;">
+  <div class="wrap">
+    <div style="padding-top:60px;" class="done">
+      <div class="done-ico">✅</div>
+      <div class="done-title">상담 신청이 완료되었습니다</div>
+      <div class="done-msg">담당 FP가 확인 후<br>빠르게 연락드리겠습니다.<br><br>🌊 우리동네보험지킴이<br>최윤경 FP</div>
+    </div>
+    <div style="text-align:center;margin-top:10px;">
+      <a href="http://pf.kakao.com/_QHWlG" target="_blank"
+        style="display:inline-block;background:#FEE500;color:#3A1D1D;padding:12px 28px;border-radius:12px;font-size:13px;font-weight:800;text-decoration:none;">
+        💛 카카오채널 바로가기
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SUPA_URL = 'https://mzftzadtoepcrwhnwdmn.supabase.co';
+var SUPA_KEY = 'sb_publishable_rp4QHXzXMgnxKmKL0QERAw_cKX0dSgh';
+var _supa = null;
+try{
+  if(typeof supabase !== 'undefined')
+    _supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+}catch(e){}
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  setTimeout(function(){t.classList.remove('on');},2200);
+}
+
+function togglePurpose(btn){ btn.classList.toggle('on'); }
+
+function getSelectedPurposes(){
+  var btns=document.querySelectorAll('.purpose-btn.on');
+  return Array.prototype.map.call(btns,function(b){return b.textContent.trim();});
+}
+
+async function submitForm(){
+  var name  = document.getElementById('f-name').value.trim();
+  var rrF   = document.getElementById('rr-front').value.trim();
+  var rrB   = document.getElementById('rr-back').value.trim();
+  var phone = document.getElementById('f-phone').value.trim();
+  var job   = document.getElementById('f-job').value;
+  var addr  = document.getElementById('f-addr').value.trim();
+  var memo  = document.getElementById('f-memo').value.trim();
+  var purposes = getSelectedPurposes();
+
+  // 유효성 검사
+  if(!document.getElementById('agree-check').checked){ showToast('개인정보 수집 동의를 체크해주세요'); return; }
+  if(!name){ showToast('이름을 입력해주세요'); return; }
+  if(rrF.length!==6){ showToast('주민등록번호 앞자리를 확인해주세요'); return; }
+  if(rrB.length!==7){ showToast('주민등록번호 뒷자리를 확인해주세요'); return; }
+  if(!phone){ showToast('연락처를 입력해주세요'); return; }
+  if(!purposes.length){ showToast('상담 목적을 1개 이상 선택해주세요'); return; }
+
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=true; btn.textContent='저장 중...';
+
+  var payload = {
+    id: 'CS_'+Date.now(),
+    name: name,
+    rr_number: rrF+'-'+rrB,   // 통합 저장
+    phone: phone,
+    job: job,
+    address: addr,
+    purposes: purposes.join(', '),
+    memo: memo,
+    status: '신규',
+    created_at: new Date().toISOString()
+  };
+
+  var saved = false;
+
+  // Supabase 저장
+  if(_supa){
+    try{
+      var r = await _supa.from('consult_requests').insert(payload);
+      if(!r.error){ saved=true; console.log('[form] Supabase 저장 성공'); }
+      else console.warn('[form] Supabase 오류:', r.error.message);
+    }catch(e){ console.warn('[form] Supabase 예외:', e.message); }
+  }
+
+  // localStorage 백업 저장
+  try{
+    var list=JSON.parse(localStorage.getItem('wd_consult_requests')||'[]');
+    list.unshift(payload);
+    if(list.length>200) list=list.slice(0,200);
+    localStorage.setItem('wd_consult_requests', JSON.stringify(list));
+    saved=true;
+  }catch(e){}
+
+  if(saved){
+    document.getElementById('form-view').style.display='none';
+    document.getElementById('done-view').style.display='block';
+    window.scrollTo(0,0);
+  } else {
+    btn.disabled=false; btn.textContent='✉️ 상담 신청하기';
+    showToast('저장 실패. 다시 시도해주세요.');
+  }
+}
+</script>
+</body>
+</html>
