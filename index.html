@@ -2,18 +2,229 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WD WAVE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WD WAVE | 우리동네보험지킴이</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4A3F7A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WD WAVE">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<!-- OG -->
+<meta property="og:title" content="WD WAVE | 우리동네보험지킴이">
+<meta property="og:description" content="보장 분석 · 상담 신청 · 보험금 청구 · 전자 명함">
+<meta property="og:url" content="https://wdwave.kr">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',sans-serif;background:#0F0F1E;min-height:100vh;color:#fff;}
+.wrap{max-width:480px;margin:0 auto;padding:0 0 48px;}
+
+/* 헤더 */
+.hd{padding:40px 20px 32px;text-align:center;position:relative;}
+.hd-wave{font-size:48px;margin-bottom:12px;display:block;}
+.hd-brand{font-size:11px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:2.5px;margin-bottom:8px;}
+.hd-title{font-size:28px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:1px;}
+.hd-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:6px;}
+.hd-name{font-size:12px;color:rgba(255,255,255,.4);margin-top:8px;}
+
+/* 구분선 */
+.sec-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.35);
+  letter-spacing:2px;padding:20px 20px 10px;display:flex;align-items:center;gap:10px;}
+.sec-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1);}
+
+/* 메인 카드 */
+.card{display:block;margin:0 16px 10px;border-radius:16px;overflow:hidden;
+  text-decoration:none;transition:transform .15s,box-shadow .15s;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.card:active{transform:scale(.98);}
+.card-inner{display:flex;align-items:center;gap:0;}
+.card-bar{width:5px;min-height:90px;flex-shrink:0;}
+.card-body{flex:1;padding:16px 14px;}
+.card-top{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.card-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:18px;flex-shrink:0;}
+.card-badge{font-size:9px;font-weight:800;padding:3px 8px;border-radius:8px;margin-left:auto;}
+.card-title{font-size:15px;font-weight:800;color:#1A1A2E;margin-bottom:3px;}
+.card-desc{font-size:11px;color:#6B7280;line-height:1.6;}
+.card-arrow{padding:0 14px;font-size:20px;color:#d1d5db;flex-shrink:0;}
+
+/* 카드 배경 */
+.bg-white{background:#fff;}
+.bg-yellow{background:#FFFDE7;}
+.bg-green{background:#F0FDF4;}
+.bg-blue{background:#EFF6FF;}
+
+/* 바 컬러 */
+.bar-purple{background:linear-gradient(180deg,#4A3F7A,#8B7AB8);}
+.bar-gold{background:linear-gradient(180deg,#F59E0B,#FCD34D);}
+.bar-green{background:linear-gradient(180deg,#059669,#34D399);}
+.bar-blue{background:linear-gradient(180deg,#2563EB,#60A5FA);}
+
+/* 아이콘 배경 */
+.ico-purple{background:#F0EEFF;}
+.ico-gold{background:#FFFBEB;}
+.ico-green{background:#ECFDF5;}
+.ico-blue{background:#EFF6FF;}
+
+/* 배지 컬러 */
+.bdg-purple{background:#F0EEFF;color:#4A3F7A;}
+.bdg-gold{background:#FFFBEB;color:#92400E;}
+.bdg-green{background:#ECFDF5;color:#065F46;}
+.bdg-blue{background:#EFF6FF;color:#1E40AF;}
+
+/* FP 카드 */
+.fp-card{margin:0 16px 10px;background:linear-gradient(135deg,rgba(74,63,122,.6),rgba(45,53,97,.6));
+  border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:18px;
+  display:flex;align-items:center;gap:14px;backdrop-filter:blur(10px);}
+.fp-av{width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.15);
+  border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;
+  justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;}
+.fp-info{flex:1;}
+.fp-name{font-size:15px;font-weight:800;color:#fff;margin-bottom:2px;}
+.fp-sub{font-size:11px;color:rgba(255,255,255,.6);}
+.fp-btns{display:flex;flex-direction:column;gap:6px;}
+.fp-btn-k{background:#FEE500;color:#3A1D1D;border:none;border-radius:9px;
+  padding:7px 14px;font-size:11px;font-weight:800;cursor:pointer;text-decoration:none;
+  display:block;text-align:center;white-space:nowrap;}
+.fp-btn-t{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);
+  border-radius:9px;padding:7px 14px;font-size:11px;font-weight:800;
+  text-decoration:none;display:block;text-align:center;white-space:nowrap;}
+
+/* 푸터 */
+.footer{text-align:center;padding:24px 16px;font-size:10px;
+  color:rgba(255,255,255,.25);line-height:1.9;}
+
+/* 배경 장식 */
+.bg-glow{position:fixed;top:-100px;left:50%;transform:translateX(-50%);
+  width:400px;height:400px;background:radial-gradient(circle,rgba(74,63,122,.4) 0%,transparent 70%);
+  pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;}
+</style>
 </head>
 <body>
+<div class="bg-glow"></div>
+<div class="wrap">
+
+  <!-- 헤더 -->
+  <div class="hd">
+    <span class="hd-wave">🌊</span>
+    <div class="hd-brand">WD WAVE</div>
+    <div class="hd-title">우리동네보험지킴이</div>
+    <div class="hd-sub">보장 분석 · 상담 · 청구 지원<br>고객 맞춤형 보험 관리 서비스</div>
+    <div class="hd-name">최윤경 FP · wdwave.kr</div>
+  </div>
+
+  <!-- 상담 서비스 -->
+  <div class="sec-label">📋 상담 서비스</div>
+
+  <a class="card bg-white" href="consult_form.html">
+    <div class="card-inner">
+      <div class="card-bar bar-purple"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div class="card-ico ico-purple">📝</div>
+          <span class="card-badge bdg-purple">1분 완료</span>
+        </div>
+        <div class="card-title">간단 상담 신청</div>
+        <div class="card-desc">인적사항 입력 후 담당 FP가<br>확인하고 바로 연락드립니다</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+  </a>
+
+  <!-- 고객 서비스 -->
+  <div class="sec-label">🛡️ 고객 서비스</div>
+
+  <a class="card bg-green" href="claim_guide.html">
+    <div class="card-inner">
+      <div class="card-bar bar-green"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div class="card-ico ico-green">💰</div>
+          <span class="card-badge bdg-green">서류 안내</span>
+        </div>
+        <div class="card-title">보험금 청구 안내</div>
+        <div class="card-desc">입원·통원·골절·암 유형별<br>필요 서류를 확인하세요</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+  </a>
+
+  <!-- 전문가 -->
+  <div class="sec-label">👤 상담 전문가</div>
+
+  <a class="card bg-yellow" href="ecard.html">
+    <div class="card-inner">
+      <div class="card-bar bar-gold"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div class="card-ico ico-gold">💼</div>
+          <span class="card-badge bdg-gold">연락처 저장</span>
+        </div>
+        <div class="card-title">전자 명함</div>
+        <div class="card-desc">최윤경 FP 연락처 저장<br>20년 금융보험 컨설턴트</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+  </a>
+
+  <!-- 카카오 -->
+  <div class="sec-label">💬 바로 문의</div>
+
+  <a class="card bg-blue" href="http://pf.kakao.com/_QHWlG" target="_blank">
+    <div class="card-inner">
+      <div class="card-bar bar-blue"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div class="card-ico ico-gold" style="background:#FEF9C3;">💛</div>
+          <span class="card-badge bdg-blue">실시간</span>
+        </div>
+        <div class="card-title">카카오채널 문의</div>
+        <div class="card-desc">카카오톡으로 편하게<br>질문하고 상담받으세요</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+  </a>
+
+  <!-- FP 카드 -->
+  <div class="sec-label">📞 담당 FP</div>
+  <div class="fp-card">
+    <div class="fp-av">사</div>
+    <div class="fp-info">
+      <div class="fp-name">최윤경 FP</div>
+      <div class="fp-sub">우리동네보험지킴이 지점장<br>010-6396-9896</div>
+    </div>
+    <div class="fp-btns">
+      <a class="fp-btn-k" href="http://pf.kakao.com/_QHWlG" target="_blank">💛 카카오</a>
+      <a class="fp-btn-t" href="tel:010-6396-9896">📞 전화</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    🌊 WD WAVE | 우리동네보험지킴이<br>
+    wdwave.kr · 최윤경 FP<br>
+    본 페이지는 보험 상담 서비스 안내 목적입니다
+  </div>
+</div>
+
 <script>
-// #client=CUST_ID 가 있으면 WD_WAVE_v2_new.html 로 해시 그대로 전달
-var h = location.hash;
-if(h && h.startsWith('#client=')) {
-  location.replace('WD_WAVE_v2_new.html' + h);
-} else {
-  location.replace('WD_WAVE_v2_new.html');
+// PWA 설치 프롬프트
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
 }
+// #client 해시 있으면 고객 전용 페이지로 이동
+(function(){
+  var h=location.hash;
+  if(h&&h.startsWith('#client=')){
+    location.replace('WD_WAVE_v2_new.html'+h);
+  }
+})();
 </script>
 </body>
 </html>
