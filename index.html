@@ -405,7 +405,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--s100);color:var(--s9
 .mn-notice-body{padding:12px 14px;min-height:100px;font-size:12px;color:var(--s500);}
 .mn-clist-wrap{margin:10px 14px 0;background:#fff;border:1.5px solid var(--wd-border);border-radius:10px;overflow:hidden;cursor:default;}
 .mn-clist-wrap:hover{box-shadow:0 2px 12px rgba(74,63,122,.1);}
-.mn-crow{display:grid;grid-template-columns:65px 1fr 52px 52px 60px;padding:7px 12px;gap:4px;border-bottom:1px solid #f4f4f8;font-size:11px;}
+.mn-crow{display:grid;grid-template-columns:55px 1fr 70px 50px 55px;padding:7px 12px;gap:4px;border-bottom:1px solid #f4f4f8;font-size:11px;} .mn-crow>*{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mn-crow:hover{background:#f9f8ff;}
 .mn-reg-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center;}
 .mn-reg-ov.on{display:flex;}
@@ -453,6 +453,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--s100);color:var(--s9
   #vw-pay-row{grid-template-columns:1fr 1fr 1fr !important;}
   .vw-grid[style*="80px 96px"]{grid-template-columns:1fr 1fr 1fr !important;}
   .vw-grid[style*="repeat(5,1fr)"]{grid-template-columns:1fr 1fr !important;}
+}
+
+/* WD 컨설팅 흐름 카드 버튼 */
+.wd-flow-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:10px;cursor:pointer;font-family:"Noto Sans KR",sans-serif;transition:all .15s;min-width:58px;}
+.wd-flow-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1);}
+@media(max-width:400px){.wd-flow-btn{min-width:50px;padding:7px 8px;}}
+.wd-flow-item{display:flex;align-items:center;gap:7px;padding:7px 10px;background:#fafafe;border-radius:9px;border:1px solid var(--wd-border);cursor:pointer;font-family:"Noto Sans KR",sans-serif;font-size:11px;font-weight:700;color:var(--wd-text);width:100%;text-align:left;transition:all .15s;}
+.wd-flow-item:hover{background:#f0ebff;border-color:#c4b5fd;transform:translateX(2px);}
+.wd-flow-item span:first-child{font-size:13px;flex-shrink:0;}
+@media(max-width:500px){
+  .wd-flow-item{padding:6px 8px;font-size:10px;}
+  .wd-flow-item span:first-child{font-size:12px;}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="window._supaLoadFailed=true;console.warn('Supabase CDN 로드 실패 - 로컬 모드');"></script>
@@ -533,7 +545,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--s100);color:var(--s9
 <div class="scr" id="section">
 <div class="mn-header">
   <div class="mn-logo"><div class="mn-logo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="1.8" stroke-linejoin="round"/></svg></div><span class="mn-logo-txt">WD WAVE</span></div>
-  <div id="header-username" style="font-size:12px;font-weight:700;color:var(--wd-primary,#4A3F7A);background:#f0ebff;padding:4px 10px;border-radius:20px;display:none;"></div>
+  <div id="header-username" style="font-size:11px;font-weight:700;color:var(--wd-primary,#4A3F7A);background:#f0ebff;padding:3px 8px;border-radius:20px;display:none;white-space:nowrap;flex-shrink:0;"></div>
   <div class="mn-app-links"><button class="mn-app-btn" onclick="goTo('workcenter')" title="&#C5C5;무채널">Ch</button><button class="mn-app-btn" onclick="goTo('custlist')" title="앱시트" style="color:#2563eb;">7</button><button class="mn-app-btn" onclick="goTo('knowledge')" title="메가" style="color:#7c3aed;font-style:italic;">M</button><button class="mn-app-btn" onclick="window.print()" title="모바일팩스"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2"><path d="M6 9V2h12v7"/><rect x="6" y="14" width="12" height="8" rx="1"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/></svg></button></div>
   <div class="mn-search-wrap"><span class="mn-search-ico">🔍</span><input type="text" class="mn-search-inp" id="wave-search" placeholder="고객 / 메뉴 / 자료 검색" autocomplete="off" oninput="waveSearch(this.value)" onfocus="document.getElementById('wave-search-result').style.display='block';if(!this.value)waveSearch('')"><div id="wave-search-result" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1.5px solid var(--wd-border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.1);z-index:999;max-height:320px;overflow-y:auto;"><div id="wave-search-content"></div></div></div>
   <button onclick="goTo('home')" style="width:32px;height:32px;background:var(--s100);border:1px solid var(--wd-border);border-radius:9px;font-size:16px;cursor:pointer;color:var(--wd-muted);flex-shrink:0;">←</button>
@@ -589,6 +601,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--s100);color:var(--s9
       <button class="mn-icon-btn" onclick="mnMenuDesign()">
         <span class="mn-icon-ico">🧾</span><span class="mn-icon-lbl">설계의뢰</span>
       </button>
+      <button class="mn-icon-btn" onclick="goTo('design-collect')" id="btn-design-collect">
+        <span class="mn-icon-ico">📊</span><span class="mn-icon-lbl">설계취합</span>
+      </button>
+      <button class="mn-icon-btn" onclick="goTo('insurer-select')" id="btn-insurer-select">
+        <span class="mn-icon-ico">🏆</span><span class="mn-icon-lbl">보험사선정</span>
+      </button>
       <button class="mn-icon-btn" onclick="mnMenuContract()">
         <span class="mn-icon-ico">📑</span><span class="mn-icon-lbl">계약조회</span>
       </button>
@@ -596,7 +614,76 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--s100);color:var(--s9
         <span class="mn-icon-ico">🏥</span><span class="mn-icon-lbl">보험금 청구</span>
       </button>
     </div>
-    <div class="mn-clist-wrap"><div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px 6px;border-bottom:1px solid #f4f4f8;"><div style="font-size:11px;font-weight:800;color:var(--wd-text);">최근 고객목록</div><button onclick="goTo('custlist')" style="font-size:10px;color:#8B7AB8;font-weight:700;background:none;border:none;cursor:pointer;padding:0;">전체보기 ›</button></div><div style="display:grid;grid-template-columns:86px 1fr 112px 70px;padding:6px 14px;gap:6px;border-bottom:1px solid #f4f4f8;background:#fafafe;"><div style="font-size:10px;font-weight:700;color:var(--wd-muted);">고객명</div><div style="font-size:10px;font-weight:700;color:var(--wd-muted);">나이 (생년월일)</div><div style="font-size:10px;font-weight:700;color:var(--wd-muted);">연락처</div><div style="font-size:10px;font-weight:700;color:var(--wd-muted);text-align:center;">고객상태</div></div><div id="mn-clist-rows" style="max-height:280px;overflow-y:auto;"><div style="text-align:center;padding:14px;font-size:11px;color:var(--wd-muted);">고객을 등록하면 여기에 표시됩니다</div></div></div>
+    <!-- WD 컨설팅 시스템 흐름 카드 -->
+    <div style="margin:0 14px 14px;background:#fff;border:1.5px solid var(--wd-border);border-radius:14px;overflow:hidden;">
+      <!-- 헤더 -->
+      <div style="padding:10px 14px 9px;border-bottom:1px solid var(--wd-border);display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#fafbff,#f5f3ff);">
+        <span style="font-size:15px;">🌊</span>
+        <span style="font-size:12px;font-weight:800;color:var(--wd-text);">WD 컨설팅 시스템</span>
+        <span style="font-size:10px;color:var(--wd-muted);margin-left:auto;background:#f0ebff;padding:2px 8px;border-radius:8px;font-weight:600;">3단계 흐름</span>
+      </div>
+      <!-- 3열 카드 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;">
+
+        <!-- 1단계: 상담 -->
+        <div style="padding:12px;border-right:1px solid var(--wd-border);">
+          <div style="display:flex;align-items:center;gap:5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #f0ebff;">
+            <span style="width:18px;height:18px;background:#4A3F7A;color:#fff;border-radius:50%;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;">1</span>
+            <span style="font-size:11px;font-weight:800;color:#4A3F7A;">상담</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <button onclick="mnMenuConsult()" class="wd-flow-item" style="border-left:3px solid #4A3F7A;">
+              <span>💬</span><span>상담</span>
+            </button>
+            <button onclick="mnMenuAnalysis()" class="wd-flow-item" style="border-left:3px solid #4A3F7A;">
+              <span>🔍</span><span>보장분석</span>
+            </button>
+            <button onclick="mnMenuDesign()" class="wd-flow-item" style="border-left:3px solid #4A3F7A;">
+              <span>📝</span><span>설계의뢰</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2단계: 설계 -->
+        <div style="padding:12px;border-right:1px solid var(--wd-border);">
+          <div style="display:flex;align-items:center;gap:5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #dcfce7;">
+            <span style="width:18px;height:18px;background:#059669;color:#fff;border-radius:50%;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;">2</span>
+            <span style="font-size:11px;font-weight:800;color:#059669;">설계</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <button onclick="showDesignCollect()" class="wd-flow-item" style="border-left:3px solid #059669;">
+              <span>📊</span><span>설계취합</span>
+            </button>
+            <button onclick="showInsurerSelect()" class="wd-flow-item" style="border-left:3px solid #059669;">
+              <span>🏆</span><span>보험사선정</span>
+            </button>
+            <button onclick="showCompareTable()" class="wd-flow-item" style="border-left:3px solid #059669;">
+              <span>📋</span><span>비교표</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3단계: 확정 -->
+        <div style="padding:12px;">
+          <div style="display:flex;align-items:center;gap:5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #bfdbfe;">
+            <span style="width:18px;height:18px;background:#1d4ed8;color:#fff;border-radius:50%;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;">3</span>
+            <span style="font-size:11px;font-weight:800;color:#1d4ed8;">확정</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <button onclick="alert('제안서 준비 중')" class="wd-flow-item" style="border-left:3px solid #94a3b8;opacity:.55;">
+              <span>📄</span><span>제안서</span>
+            </button>
+            <button onclick="alert('계약등록 준비 중')" class="wd-flow-item" style="border-left:3px solid #94a3b8;opacity:.55;">
+              <span>📑</span><span>계약등록</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+
+    <div class="mn-clist-wrap"><div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px 6px;border-bottom:1px solid #f4f4f8;"><div style="font-size:11px;font-weight:800;color:var(--wd-text);">최근 고객목록</div><button onclick="goTo('custlist')" style="font-size:10px;color:#8B7AB8;font-weight:700;background:none;border:none;cursor:pointer;padding:0;">전체보기 ›</button></div><div style="display:grid;grid-template-columns:80px 1fr 90px 60px;padding:6px 10px;gap:4px;border-bottom:1px solid #f4f4f8;background:#fafafe;"><div style="font-size:10px;font-weight:700;color:var(--wd-muted);">고객명</div><div style="font-size:10px;font-weight:700;color:var(--wd-muted);white-space:nowrap;">생년월일</div><div style="font-size:10px;font-weight:700;color:var(--wd-muted);">연락처</div><div style="font-size:10px;font-weight:700;color:var(--wd-muted);text-align:center;">고객상태</div></div><div id="mn-clist-rows" style="max-height:280px;overflow-y:auto;"><div style="text-align:center;padding:14px;font-size:11px;color:var(--wd-muted);">고객을 등록하면 여기에 표시됩니다</div></div></div>
     <div class="mn-content">
       <div class="mn-card"><div class="mn-card-hd">고객 / 계약현황</div><div class="mn-card-row" onclick="goTo('custlist')"><div class="mn-card-row-l">완전모니터링</div><span class="mn-card-count" id="cnt-monitor">0건</span></div><div class="mn-card-row" onclick="goTo('custlist')"><div class="mn-card-row-l">이달의타겟</div><span class="mn-card-count" id="cnt-target">0건</span></div><div class="mn-card-row" onclick="goTo('custlist')" style="background:#fffbeb;"><div class="mn-card-row-l"><span style="font-size:10px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 5px;margin-right:3px;">징기</span>심효예정</div><span class="mn-card-count amber" id="cnt-expire">0건</span></div><div class="mn-card-row" onclick="goTo('custlist')" style="background:#fffbeb;"><div class="mn-card-row-l"><span style="font-size:10px;background:#fef3c7;color:#92400e;border-radius:4px;padding:1px 5px;margin-right:3px;">징기</span>자동이체미납</div><span class="mn-card-count amber" id="cnt-unpaid">0건</span></div><div class="mn-card-row" onclick="goTo('custlist')"><div class="mn-card-row-l"><span style="font-size:10px;background:#e0f2fe;color:#0369a1;border-radius:4px;padding:1px 5px;margin-right:3px;">자동차</span>만기도래</div><span class="mn-card-count" id="cnt-expire-car">0건</span></div><div class="mn-card-row" onclick="goTo('custlist')"><div class="mn-card-row-l"><span style="font-size:10px;background:#e0f2fe;color:#0369a1;border-radius:4px;padding:1px 5px;margin-right:3px;">자동차</span>사고접수</div><span class="mn-card-count" id="cnt-accident">0건</span></div></div>
       <div class="mn-card"><div class="mn-card-hd">오늘 할 일</div>
@@ -1543,7 +1630,7 @@ function mnRefreshClist(){
       +'background:'+st.bg+';color:'+st.c+';border:1px solid '+st.bd+';'
       +'font-size:10px;font-weight:700;white-space:nowrap;">'+st.lbl+'</span>';
     h+='<div class="mn-crow" onclick="(function(cid){var db2=gdb();for(var j=0;j<db2.customers.length;j++){if(db2.customers[j].id===cid){openDet(db2.customers[j]);return;}}})(\''+c.id+'\')" '
-      +'style="display:grid;grid-template-columns:86px 1fr 112px 70px;padding:6px 14px;gap:6px;border-bottom:1px solid #f4f4f8;cursor:pointer;align-items:center;" '
+      +'style="display:grid;grid-template-columns:80px 1fr 90px 60px;padding:6px 10px;gap:4px;border-bottom:1px solid #f4f4f8;cursor:pointer;align-items:center;" '
       +'onmouseover="this.style.background=\'#f5f3ff\'" onmouseout="this.style.background=\'#fff\'">'
       +'<div style="font-size:12px;font-weight:700;color:var(--wd-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+c.name+'</div>'
       +'<div style="font-size:11px;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+ageAndBirth+'</div>'
@@ -8460,6 +8547,7 @@ vs 허혈성심장질환 (더 넓은 범위)
 
 <script>
 var DBK = 'wdcare_v40s4';
+var _CURRENT_UID = '';
 var KKO = 'http://pf.kakao.com/_QHWlG';
 var CL  = {S:'신규',P:'진행중',J:'점검',D:'설계중',C:'계약완료',M:'관리중'};
 var CID = null, ST = null, TT = null;
@@ -8523,6 +8611,11 @@ function sdb(d){
 }
 
 function goTo(id){
+  // 박서영은 설정 접근 차단
+  if(id==='settings' && _CURRENT_UID==='kfcyk40') return;
+  // 설계취합/보험사선정 화면
+  if(id==='design-collect'){ showDesignCollect(); return; }
+  if(id==='insurer-select'){ showInsurerSelect(); return; }
   var all=document.querySelectorAll('.scr');
   for(var i=0;i<all.length;i++) all[i].style.display='none';
   var el=document.getElementById(id);
@@ -23593,6 +23686,7 @@ function lockVerify(){
     localStorage.setItem(_LOCK_USER_KEY, matched[0].name);
     var _uname = matched[0].name;
     var _uid = matched[0].id;
+    _CURRENT_UID = _uid;
     localStorage.setItem('wd_user_name', _uname);
     // 사용자별 데이터 분리
     if(_uid === 'kfcyk50'){
@@ -23616,7 +23710,7 @@ function lockVerify(){
     setTimeout(function(){
       var btnSettings = document.getElementById('btn-settings');
       if(btnSettings){
-        btnSettings.style.display = (_uid==='kfcyk40') ? 'none' : '';
+        btnSettings.style.display = (_CURRENT_UID==='kfcyk40') ? 'none' : '';
       }
     }, 200);
   } else {
@@ -23648,6 +23742,818 @@ window.lockLogout = lockLogout;
   // 인증 없으면 lock-screen이 display:flex로 이미 보임
 })();
 </script>
+
+<!-- ══ 설계취합 화면 ══ -->
+<div class="scr" id="design-collect" style="background:#F7F8FC;min-height:100vh;display:none;">
+  <div class="mn-header" style="background:linear-gradient(135deg,#4A3F7A,#2D3561);">
+    <button onclick="goTo('section')" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">← 홈</button>
+    <div style="flex:1;text-align:center;font-size:16px;font-weight:800;color:#fff;">📊 설계취합</div>
+    <button onclick="saveDesignCollect()" style="background:#fff;color:#4A3F7A;border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">💾 저장</button>
+  </div>
+  <div style="padding:16px;max-width:800px;margin:0 auto;">
+
+    <!-- 고객 선택 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="font-size:13px;font-weight:800;color:#1A1A2E;margin-bottom:10px;">👤 고객 선택</div>
+      <div style="display:flex;gap:8px;">
+        <input id="dc-cust-search" placeholder="고객명 검색..." style="flex:1;padding:9px 12px;border:1px solid #E8E8F0;border-radius:10px;font-size:13px;font-family:inherit;" oninput="dcSearchCust(this.value)">
+        <button onclick="dcSearchCust(document.getElementById('dc-cust-search').value)" style="padding:9px 16px;background:#4A3F7A;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">검색</button>
+      </div>
+      <div id="dc-cust-result" style="margin-top:8px;"></div>
+      <div id="dc-selected-cust" style="margin-top:8px;padding:10px 14px;background:#f0ebff;border-radius:10px;display:none;">
+        <span style="font-size:13px;font-weight:700;color:#4A3F7A;" id="dc-selected-name"></span>
+        <span style="font-size:11px;color:#6B7280;margin-left:8px;" id="dc-selected-info"></span>
+      </div>
+    </div>
+
+    <!-- 보험사 입력 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:800;color:#1A1A2E;">🏢 보험사</div>
+        <button onclick="dcAddInsurer()" style="padding:5px 12px;background:#4A3F7A;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">+ 추가</button>
+      </div>
+      <div id="dc-insurer-list" style="display:flex;flex-wrap:wrap;gap:8px;">
+        <!-- 기본 보험사 -->
+      </div>
+    </div>
+
+    <!-- 보장 항목 + 보험료 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:800;color:#1A1A2E;">📋 보장항목별 보험료</div>
+        <button onclick="dcAddItem()" style="padding:5px 12px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">+ 항목추가</button>
+      </div>
+      <div id="dc-items-table" style="overflow-x:auto;">
+        <!-- JS로 렌더링 -->
+      </div>
+    </div>
+
+    <!-- 총 보험료 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="font-size:13px;font-weight:800;color:#1A1A2E;margin-bottom:10px;">💰 보험사별 총 보험료</div>
+      <div id="dc-total-row" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+    </div>
+
+    <!-- 메모 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="font-size:13px;font-weight:800;color:#1A1A2E;margin-bottom:8px;">📝 설계 메모</div>
+      <textarea id="dc-memo" rows="3" placeholder="각 보험사 강점, 특이사항 메모..." style="width:100%;padding:10px;border:1px solid #E8E8F0;border-radius:10px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
+    </div>
+
+    <!-- 저장된 설계 이력 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:800;color:#1A1A2E;">📚 설계 이력</div>
+        <button onclick="dcNewDesign()" style="padding:5px 12px;background:#2D3561;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">새 설계</button>
+      </div>
+      <div id="dc-history-list"><div style="font-size:12px;color:#94A3B8;padding:8px 0;">저장된 설계가 없어요</div></div>
+    </div>
+
+    <button onclick="saveDesignCollect()" style="width:100%;padding:14px;background:linear-gradient(135deg,#4A3F7A,#2D3561);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;">💾 설계취합 저장 → 보험사선정으로</button>
+  </div>
+</div>
+
+<!-- ══ 보험사선정 화면 ══ -->
+<div class="scr" id="insurer-select" style="background:#F7F8FC;min-height:100vh;display:none;">
+  <div class="mn-header" style="background:linear-gradient(135deg,#059669,#047857);">
+    <button onclick="goTo('design-collect')" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">← 설계취합</button>
+    <div style="flex:1;text-align:center;font-size:16px;font-weight:800;color:#fff;">🏆 보험사선정</div>
+    <button onclick="saveFinalPlan()" style="background:#fff;color:#059669;border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">💾 최종저장</button>
+  </div>
+  <div style="padding:16px;max-width:800px;margin:0 auto;">
+
+    <!-- 설계 선택 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="font-size:13px;font-weight:800;color:#1A1A2E;margin-bottom:10px;">📂 설계취합 불러오기</div>
+      <select id="is-design-select" onchange="loadDesignForSelect(this.value)" style="width:100%;padding:10px;border:1px solid #E8E8F0;border-radius:10px;font-size:13px;font-family:inherit;">
+        <option value="">설계를 선택하세요</option>
+      </select>
+    </div>
+
+    <!-- 고객 정보 -->
+    <div id="is-cust-info" style="background:linear-gradient(135deg,#4A3F7A,#2D3561);border-radius:14px;padding:14px;margin-bottom:12px;color:#fff;display:none;">
+      <div style="font-size:11px;opacity:.7;margin-bottom:4px;">선택된 고객</div>
+      <div style="font-size:16px;font-weight:800;" id="is-cust-name"></div>
+      <div style="font-size:12px;opacity:.8;margin-top:2px;" id="is-cust-detail"></div>
+    </div>
+
+    <!-- 항목별 보험사 선정 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="font-size:13px;font-weight:800;color:#1A1A2E;margin-bottom:12px;">✅ 항목별 최적 보험사 선정</div>
+      <div id="is-items-list"><div style="font-size:12px;color:#94A3B8;">설계취합을 먼저 불러오세요</div></div>
+    </div>
+
+    <!-- 총 보험료 합계 -->
+    <div style="background:linear-gradient(135deg,#059669,#047857);border-radius:14px;padding:16px;margin-bottom:12px;color:#fff;">
+      <div style="font-size:12px;opacity:.8;margin-bottom:4px;">최종 선정 총 보험료</div>
+      <div style="font-size:32px;font-weight:900;">₩<span id="is-total-premium">0</span></div>
+    </div>
+
+    <!-- 최종 추천안 메모 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="font-size:13px;font-weight:800;color:#1A1A2E;margin-bottom:8px;">💬 최종 추천안 메모</div>
+      <textarea id="is-final-memo" rows="3" placeholder="고객에게 전달할 최종 추천 내용..." style="width:100%;padding:10px;border:1px solid #E8E8F0;border-radius:10px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
+    </div>
+
+    <!-- 저장된 최종 추천안 -->
+    <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #E8E8F0;">
+      <div style="font-size:13px;font-weight:800;color:#1A1A2E;margin-bottom:10px;">📋 저장된 최종 추천안</div>
+      <div id="is-saved-list"><div style="font-size:12px;color:#94A3B8;">저장된 추천안이 없어요</div></div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-bottom:0;">
+    <button onclick="saveFinalPlan()" style="flex:1;padding:14px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;">🏆 최종 추천안 저장</button>
+    <button onclick="showCompareTable()" style="flex:1;padding:14px;background:linear-gradient(135deg,#2D3561,#4A3F7A);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;">📊 비교표 보기</button>
+  </div>
+  </div>
+</div>
+
+
+<script>
+/* ════════════════════════════════
+   설계취합 + 보험사선정 JS
+════════════════════════════════ */
+var _DC = {
+  custId: '',
+  custName: '',
+  insurers: ['삼성화재','DB손보','한화손보','KB손보','메리츠'],
+  items: ['암','뇌','심장','수술비','입원비','실손','간병'],
+  prices: {}, // {보험사: {항목: 금액}}
+  memo: '',
+  editId: null
+};
+
+var _DC_KEY = 'wd_design_collect';
+var _IS_KEY = 'wd_insurer_select';
+
+/* ── 설계취합 화면 열기 ── */
+function showDesignCollect(){
+  var all = document.querySelectorAll('.scr');
+  all.forEach(function(el){ el.style.display='none'; });
+  var el = document.getElementById('design-collect');
+  if(el) el.style.display='block';
+  window.scrollTo(0,0);
+  dcInit();
+}
+
+function dcInit(){
+  dcNewDesign();
+  dcRenderInsurerList();
+  dcRenderTable();
+  dcRenderHistory();
+  dcRenderTotalRow();
+}
+
+function dcNewDesign(){
+  _DC.custId=''; _DC.custName=''; _DC.editId=null;
+  _DC.prices={};
+  var si = document.getElementById('dc-selected-cust');
+  if(si) si.style.display='none';
+  var mi = document.getElementById('dc-memo');
+  if(mi) mi.value='';
+  var sr = document.getElementById('dc-cust-search');
+  if(sr) sr.value='';
+  var res = document.getElementById('dc-cust-result');
+  if(res) res.innerHTML='';
+  dcRenderTable();
+  dcRenderTotalRow();
+}
+
+/* 고객 검색 */
+function dcSearchCust(q){
+  var el = document.getElementById('dc-cust-result');
+  if(!el||!q.trim()) return;
+  var db = typeof gdb==='function'?gdb():{customers:[]};
+  var results = db.customers.filter(function(cu){ return cu.name&&cu.name.indexOf(q.trim())>=0; });
+  if(!results.length){ el.innerHTML='<div style="font-size:12px;color:#94A3B8;padding:6px 0;">검색 결과 없음</div>'; return; }
+  el.innerHTML='';
+  results.slice(0,5).forEach(function(cu){
+    var birth=(cu.data&&cu.data.customer&&cu.data.customer.birth)||'';
+    var age=typeof calcAge==='function'?calcAge(birth):'';
+    var div=document.createElement('div');
+    div.style.cssText='padding:9px 12px;background:#f9f8ff;border-radius:10px;cursor:pointer;margin-bottom:5px;border:1px solid #E8E8F0;';
+    div.innerHTML='<span style="font-size:13px;font-weight:700;color:#1A1A2E;">'+cu.name+'</span>'+(age?'<span style="font-size:11px;color:#6B7280;margin-left:8px;">'+age+'세</span>':'');
+    (function(cid,cname,cbirth,cage){div.addEventListener('click',function(){dcSelectCust(cid,cname,cbirth,cage);});})(cu.id,cu.name,birth,age);
+    el.appendChild(div);
+  });
+}
+
+function dcSelectCust(id,name,birth,age){
+  _DC.custId=id; _DC.custName=name;
+  var si=document.getElementById('dc-selected-cust');
+  var sn=document.getElementById('dc-selected-name');
+  var si2=document.getElementById('dc-selected-info');
+  if(si) si.style.display='block';
+  if(sn) sn.textContent=name+'님';
+  if(si2) si2.textContent=(birth||'')+(age?' · '+age+'세':'');
+  var res=document.getElementById('dc-cust-result');
+  if(res) res.innerHTML='';
+  var sr=document.getElementById('dc-cust-search');
+  if(sr) sr.value=name;
+}
+
+/* 보험사 관리 */
+function dcAddInsurer(){
+  var name = prompt('보험사명 입력:');
+  if(name&&name.trim()&&_DC.insurers.indexOf(name.trim())<0){
+    _DC.insurers.push(name.trim());
+    dcRenderInsurerList();
+    dcRenderTable();
+    dcRenderTotalRow();
+  }
+}
+
+function dcRemoveInsurer(name){
+  _DC.insurers = _DC.insurers.filter(function(i){return i!==name;});
+  if(_DC.prices[name]) delete _DC.prices[name];
+  dcRenderInsurerList();
+  dcRenderTable();
+  dcRenderTotalRow();
+}
+
+function dcRenderInsurerList(){
+  var el=document.getElementById('dc-insurer-list');if(!el)return;
+  el.innerHTML='';
+  _DC.insurers.forEach(function(ins){
+    var div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:5px;padding:6px 12px;background:#f0ebff;border-radius:20px;font-size:12px;font-weight:700;color:#4A3F7A;';
+    var span=document.createElement('span');span.textContent=ins;
+    var btn=document.createElement('button');
+    btn.textContent='×';
+    btn.style.cssText='background:none;border:none;color:#8B7AB8;cursor:pointer;font-size:14px;line-height:1;';
+    (function(i){btn.addEventListener('click',function(){dcRemoveInsurer(i);});})(ins);
+    div.appendChild(span);div.appendChild(btn);
+    el.appendChild(div);
+  });
+}
+
+/* 항목 관리 */
+function dcAddItem(){
+  var name = prompt('보장항목 입력 (예: 치아, 골절):');
+  if(name&&name.trim()&&_DC.items.indexOf(name.trim())<0){
+    _DC.items.push(name.trim());
+    dcRenderTable();
+  }
+}
+
+/* 보험료 테이블 렌더링 */
+function dcRenderTable(){
+  var el=document.getElementById('dc-items-table');if(!el)return;
+  if(!_DC.insurers.length||!_DC.items.length){el.innerHTML='<div style="font-size:12px;color:#94A3B8;">보험사와 항목을 추가해주세요</div>';return;}
+
+  var html='<table style="width:100%;border-collapse:collapse;font-size:12px;">';
+  // 헤더
+  html+='<tr style="background:#f9f8ff;">'
+    +'<th style="padding:8px;text-align:left;border-bottom:2px solid #E8E8F0;font-weight:700;color:#4A3F7A;min-width:70px;">보장항목</th>';
+  _DC.insurers.forEach(function(ins){
+    html+='<th style="padding:8px;text-align:center;border-bottom:2px solid #E8E8F0;font-weight:700;color:#4A3F7A;min-width:90px;">'+ins+'</th>';
+  });
+  html+='</tr>';
+
+  // 항목 행
+  _DC.items.forEach(function(item){
+    html+='<tr>';
+    html+='<td style="padding:8px;border-bottom:1px solid #f4f4f8;font-weight:600;color:#374151;">'+item+'</td>';
+    _DC.insurers.forEach(function(ins){
+      var val=(_DC.prices[ins]&&_DC.prices[ins][item])||'';
+      html+='<td style="padding:4px;border-bottom:1px solid #f4f4f8;text-align:center;">'
+        +'<input type="number" value="'+val+'" placeholder="0" '
+        +'data-ins="'+ins+'" data-item="'+item+'" '
+        +'oninput="dcUpdatePrice(this)" '
+        +'style="width:80px;padding:6px;border:1px solid #E8E8F0;border-radius:8px;font-size:12px;text-align:right;font-family:inherit;">'
+        +'</td>';
+    });
+    html+='</tr>';
+  });
+  html+='</table>';
+  el.innerHTML=html;
+}
+
+function dcUpdatePrice(inp){
+  var ins=inp.dataset.ins;
+  var item=inp.dataset.item;
+  var val=parseInt(inp.value)||0;
+  if(!_DC.prices[ins]) _DC.prices[ins]={};
+  _DC.prices[ins][item]=val;
+  dcRenderTotalRow();
+}
+
+function dcRenderTotalRow(){
+  var el=document.getElementById('dc-total-row');if(!el)return;
+  if(!_DC.insurers.length){el.innerHTML='';return;}
+  el.innerHTML=_DC.insurers.map(function(ins){
+    var total=0;
+    if(_DC.prices[ins]) Object.values(_DC.prices[ins]).forEach(function(v){total+=v||0;});
+    return '<div style="flex:1;min-width:100px;background:#f9f8ff;border-radius:12px;padding:12px;text-align:center;border:1px solid #E8E8F0;">'
+      +'<div style="font-size:11px;color:#6B7280;margin-bottom:4px;">'+ins+'</div>'
+      +'<div style="font-size:16px;font-weight:900;color:#4A3F7A;">'+total.toLocaleString()+'원</div>'
+      +'</div>';
+  }).join('');
+}
+
+/* 설계취합 저장 */
+function saveDesignCollect(){
+  if(!_DC.custId){alert('고객을 먼저 선택해주세요');return;}
+  var memo=document.getElementById('dc-memo')?.value||'';
+  var designs=JSON.parse(localStorage.getItem(_DC_KEY)||'[]');
+  var entry={
+    id:_DC.editId||('DC_'+Date.now()),
+    custId:_DC.custId,
+    custName:_DC.custName,
+    insurers:_DC.insurers.slice(),
+    items:_DC.items.slice(),
+    prices:JSON.parse(JSON.stringify(_DC.prices)),
+    memo:memo,
+    date:new Date().toISOString().split('T')[0],
+    saved:new Date().toISOString()
+  };
+  if(_DC.editId){
+    var idx=designs.findIndex(function(d){return d.id===_DC.editId;});
+    if(idx>=0) designs[idx]=entry;
+    else designs.unshift(entry);
+  } else {
+    designs.unshift(entry);
+  }
+  localStorage.setItem(_DC_KEY,JSON.stringify(designs));
+  _DC.editId=entry.id;
+  dcRenderHistory();
+  alert('✅ 설계취합 저장 완료! 보험사선정에서 불러올 수 있어요.');
+}
+
+function dcRenderHistory(){
+  var el=document.getElementById('dc-history-list');if(!el)return;
+  var designs=JSON.parse(localStorage.getItem(_DC_KEY)||'[]');
+  if(!designs.length){el.innerHTML='<div style="font-size:12px;color:#94A3B8;padding:8px 0;">저장된 설계가 없어요</div>';return;}
+  el.innerHTML='';
+  designs.slice(0,10).forEach(function(d){
+    var div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f9f8ff;border-radius:10px;margin-bottom:6px;cursor:pointer;border:1px solid #E8E8F0;';
+    var info=document.createElement('div');info.style.flex='1';
+    info.innerHTML='<div style="font-size:13px;font-weight:700;color:#1A1A2E;">'+d.custName+'님</div>'
+      +'<div style="font-size:11px;color:#6B7280;">'+d.date+' · '+d.insurers.join(', ')+'</div>';
+    var delBtn=document.createElement('button');
+    delBtn.textContent='🗑';
+    delBtn.style.cssText='background:none;border:none;color:#94A3B8;cursor:pointer;font-size:14px;';
+    (function(did){ div.addEventListener('click',function(){dcLoadDesign(did);});
+      delBtn.addEventListener('click',function(e){e.stopPropagation();dcDeleteDesign(did);}); })(d.id);
+    div.appendChild(info);div.appendChild(delBtn);
+    el.appendChild(div);
+  });
+}
+
+function dcLoadDesign(id){
+  var designs=JSON.parse(localStorage.getItem(_DC_KEY)||'[]');
+  var d=designs.find(function(x){return x.id===id;});
+  if(!d)return;
+  _DC.custId=d.custId; _DC.custName=d.custName;
+  _DC.insurers=d.insurers.slice(); _DC.items=d.items.slice();
+  _DC.prices=JSON.parse(JSON.stringify(d.prices)); _DC.editId=d.id;
+  var si=document.getElementById('dc-selected-cust');
+  var sn=document.getElementById('dc-selected-name');
+  if(si) si.style.display='block';
+  if(sn) sn.textContent=d.custName+'님';
+  var mi=document.getElementById('dc-memo');
+  if(mi) mi.value=d.memo||'';
+  dcRenderInsurerList();
+  dcRenderTable();
+  dcRenderTotalRow();
+}
+
+function dcDeleteDesign(id){
+  if(!confirm('삭제할까요?'))return;
+  var designs=JSON.parse(localStorage.getItem(_DC_KEY)||'[]');
+  localStorage.setItem(_DC_KEY,JSON.stringify(designs.filter(function(d){return d.id!==id;})));
+  dcRenderHistory();
+}
+
+/* ════════════════════════════════
+   보험사선정 JS
+════════════════════════════════ */
+var _IS = { designId:'', selections:{}, finalMemo:'' };
+
+function showInsurerSelect(){
+  var all=document.querySelectorAll('.scr');
+  all.forEach(function(el){el.style.display='none';});
+  var el=document.getElementById('insurer-select');
+  if(el) el.style.display='block';
+  window.scrollTo(0,0);
+  isInit();
+}
+
+function isInit(){
+  isLoadDesignOptions();
+  isRenderSavedList();
+}
+
+function isLoadDesignOptions(){
+  var sel=document.getElementById('is-design-select');if(!sel)return;
+  var designs=JSON.parse(localStorage.getItem(_DC_KEY)||'[]');
+  sel.innerHTML='<option value="">설계를 선택하세요</option>';
+  designs.forEach(function(d){
+    sel.innerHTML+='<option value="'+d.id+'">'+d.custName+'님 ('+d.date+')</option>';
+  });
+}
+
+function loadDesignForSelect(id){
+  if(!id)return;
+  var designs=JSON.parse(localStorage.getItem(_DC_KEY)||'[]');
+  var d=designs.find(function(x){return x.id===id;});
+  if(!d)return;
+  _IS.designId=id; _IS.selections={};
+  var ci=document.getElementById('is-cust-info');
+  var cn=document.getElementById('is-cust-name');
+  var cd=document.getElementById('is-cust-detail');
+  if(ci)ci.style.display='block';
+  if(cn)cn.textContent=d.custName+'님';
+  if(cd)cd.textContent=d.date+' · '+d.insurers.join(', ');
+  var el=document.getElementById('is-items-list');if(!el)return;
+  el.innerHTML='';
+  d.items.forEach(function(item){
+    var options=d.insurers.map(function(ins){
+      var price=(d.prices[ins]&&d.prices[ins][item])||0;
+      return {ins:ins,price:price};
+    }).filter(function(o){return o.price>0;});
+    var cheapest=options.length?options.reduce(function(a,b){return a.price<b.price?a:b;}):null;
+    var row=document.createElement('div');
+    row.style.cssText='padding:12px 0;border-bottom:1px solid #f4f4f8;';
+    var hdr=document.createElement('div');
+    hdr.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;';
+    hdr.innerHTML='<span style="font-size:13px;font-weight:700;color:#1A1A2E;">'+item+'</span>'
+      +(cheapest?'<span style="font-size:10px;background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:8px;font-weight:700;">💚 최저: '+cheapest.ins+'</span>':'');
+    var btnWrap=document.createElement('div');
+    btnWrap.style.cssText='display:flex;gap:6px;flex-wrap:wrap;';
+    d.insurers.forEach(function(ins){
+      var price=(d.prices[ins]&&d.prices[ins][item])||0;
+      var btn=document.createElement('button');
+      btn.id='is-btn-'+item+'-'+ins;
+      btn.innerHTML=ins+(price?' <span style="font-size:10px;opacity:.8;">'+price.toLocaleString()+'</span>':'');
+      btn.style.cssText='padding:7px 12px;border-radius:10px;border:2px solid #E8E8F0;background:#fff;color:#374151;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;';
+      (function(it,i,d2){btn.addEventListener('click',function(){isSelectInsurer(it,i,d2);});})(item,ins,d);
+      btnWrap.appendChild(btn);
+    });
+    row.appendChild(hdr);row.appendChild(btnWrap);
+    el.appendChild(row);
+  });
+  isCalcTotal(d);
+}
+
+function isSelectInsurer(item,ins){
+  var designId=document.getElementById('is-design-select')?.value;
+  if(!designId)return;
+  var designs=JSON.parse(localStorage.getItem(_DC_KEY)||'[]');
+  var d=designs.find(function(x){return x.id===designId;});
+  if(!d)return;
+
+  _IS.selections[item]=ins;
+
+  // 버튼 스타일 업데이트
+  d.insurers.forEach(function(i){
+    var btn=document.getElementById('is-btn-'+item+'-'+i);
+    if(!btn)return;
+    var selected=i===ins;
+    btn.style.borderColor=selected?'#4A3F7A':'#E8E8F0';
+    btn.style.background=selected?'#4A3F7A':'#fff';
+    btn.style.color=selected?'#fff':'#374151';
+  });
+
+  isCalcTotal(d);
+}
+
+function isCalcTotal(d){
+  var total=0;
+  Object.keys(_IS.selections).forEach(function(item){
+    var ins=_IS.selections[item];
+    var price=(d.prices[ins]&&d.prices[ins][item])||0;
+    total+=price;
+  });
+  var el=document.getElementById('is-total-premium');
+  if(el) el.textContent=total.toLocaleString();
+}
+
+function saveFinalPlan(){
+  var designId=document.getElementById('is-design-select')?.value;
+  if(!designId){alert('설계를 먼저 선택해주세요');return;}
+  if(!Object.keys(_IS.selections).length){alert('항목별 보험사를 선택해주세요');return;}
+
+  var designs=JSON.parse(localStorage.getItem(_DC_KEY)||'[]');
+  var d=designs.find(function(x){return x.id===designId;});
+
+  var total=0;
+  Object.keys(_IS.selections).forEach(function(item){
+    var ins=_IS.selections[item];
+    var price=(d.prices[ins]&&d.prices[ins][item])||0;
+    total+=price;
+  });
+
+  var plans=JSON.parse(localStorage.getItem(_IS_KEY)||'[]');
+  plans.unshift({
+    id:'IS_'+Date.now(),
+    designId:designId,
+    custName:d?d.custName:'',
+    custId:d?d.custId:'',
+    selections:JSON.parse(JSON.stringify(_IS.selections)),
+    totalPremium:total,
+    memo:document.getElementById('is-final-memo')?.value||'',
+    date:new Date().toISOString().split('T')[0],
+    saved:new Date().toISOString()
+  });
+  localStorage.setItem(_IS_KEY,JSON.stringify(plans));
+  isRenderSavedList();
+  alert('🏆 최종 추천안 저장 완료!');
+}
+
+function isRenderSavedList(){
+  var el=document.getElementById('is-saved-list');if(!el)return;
+  var plans=JSON.parse(localStorage.getItem(_IS_KEY)||'[]');
+  if(!plans.length){el.innerHTML='<div style="font-size:12px;color:#94A3B8;">저장된 추천안이 없어요</div>';return;}
+  el.innerHTML=plans.slice(0,10).map(function(p){
+    var selText=Object.keys(p.selections).map(function(item){
+      return item+'→'+p.selections[item];
+    }).join(', ');
+    return '<div style="padding:12px;background:#f9f8ff;border-radius:12px;margin-bottom:8px;border:1px solid #E8E8F0;">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">'
+      +'<span style="font-size:13px;font-weight:700;color:#1A1A2E;">'+p.custName+'님</span>'
+      +'<span style="font-size:11px;color:#6B7280;">'+p.date+'</span>'
+      +'</div>'
+      +'<div style="font-size:11px;color:#374151;margin-bottom:6px;">'+selText+'</div>'
+      +'<div style="font-size:16px;font-weight:800;color:#059669;">총 ₩'+p.totalPremium.toLocaleString()+'원</div>'
+      +(p.memo?'<div style="font-size:11px;color:#6B7280;margin-top:4px;">'+p.memo+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+window.showDesignCollect=showDesignCollect;
+window.showInsurerSelect=showInsurerSelect;
+window.dcSearchCust=dcSearchCust;
+window.dcSelectCust=dcSelectCust;
+window.dcAddInsurer=dcAddInsurer;
+window.dcRemoveInsurer=dcRemoveInsurer;
+window.dcAddItem=dcAddItem;
+window.dcUpdatePrice=dcUpdatePrice;
+window.dcNewDesign=dcNewDesign;
+window.dcLoadDesign=dcLoadDesign;
+window.dcDeleteDesign=dcDeleteDesign;
+window.saveDesignCollect=saveDesignCollect;
+window.loadDesignForSelect=loadDesignForSelect;
+window.isSelectInsurer=isSelectInsurer;
+window.saveFinalPlan=saveFinalPlan;
+</script>
+
+
+<!-- ══ 비교표 화면 ══ -->
+<div class="scr" id="compare-table" style="background:#F7F8FC;min-height:100vh;display:none;">
+  <div class="mn-header" style="background:linear-gradient(135deg,#2D3561,#4A3F7A);" id="compare-header-bar">
+    <button onclick="goTo('insurer-select')" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">← 보험사선정</button>
+    <div style="flex:1;text-align:center;font-size:16px;font-weight:800;color:#fff;">📊 비교표</div>
+    <button onclick="printCompareTable()" style="background:#fff;color:#2D3561;border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">🖨️ PDF 출력</button>
+  </div>
+
+  <!-- 인쇄 영역 -->
+  <div id="compare-print-area" style="padding:20px;max-width:860px;margin:0 auto;">
+
+    <!-- 헤더 -->
+    <div style="background:linear-gradient(135deg,#2D3561,#4A3F7A);border-radius:16px;padding:24px;margin-bottom:20px;color:#fff;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div>
+          <div style="font-size:11px;opacity:.6;letter-spacing:1px;margin-bottom:4px;">WD WAVE · 우리동네보험지킴이</div>
+          <div style="font-size:22px;font-weight:900;" id="ct-title">보험 설계 비교표</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;opacity:.7;" id="ct-date"></div>
+          <div style="font-size:11px;opacity:.7;margin-top:2px;">담당: 최윤경 지점장</div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,.2);padding-top:12px;">
+        <div style="font-size:11px;opacity:.7;margin-bottom:3px;">고객</div>
+        <div style="font-size:20px;font-weight:800;" id="ct-cust-name"></div>
+      </div>
+    </div>
+
+    <!-- 비교표 -->
+    <div style="background:#fff;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid #E8E8F0;">
+      <div style="font-size:14px;font-weight:800;color:#1A1A2E;margin-bottom:14px;">📋 보장항목별 보험료 비교</div>
+      <div id="ct-table-wrap" style="overflow-x:auto;"></div>
+    </div>
+
+    <!-- 총 보험료 요약 -->
+    <div style="background:#fff;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid #E8E8F0;">
+      <div style="font-size:14px;font-weight:800;color:#1A1A2E;margin-bottom:12px;">💰 보험사별 총 보험료</div>
+      <div id="ct-total-wrap" style="display:flex;gap:10px;flex-wrap:wrap;"></div>
+    </div>
+
+    <!-- 선정 결과 -->
+    <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid #86efac;">
+      <div style="font-size:14px;font-weight:800;color:#15803d;margin-bottom:12px;">✅ 최종 선정 결과</div>
+      <div id="ct-selection-wrap"></div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid #86efac;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:15px;font-weight:800;color:#15803d;">최종 선정 총 보험료</div>
+        <div style="font-size:26px;font-weight:900;color:#15803d;">₩<span id="ct-final-total">0</span></div>
+      </div>
+    </div>
+
+    <!-- 메모 -->
+    <div id="ct-memo-wrap" style="background:#fff;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid #E8E8F0;display:none;">
+      <div style="font-size:14px;font-weight:800;color:#1A1A2E;margin-bottom:8px;">📝 설계 메모</div>
+      <div id="ct-memo-text" style="font-size:13px;color:#374151;line-height:1.8;white-space:pre-wrap;"></div>
+    </div>
+
+    <!-- 안내문 -->
+    <div style="background:#fffbeb;border-radius:12px;padding:14px;border:1px solid #fde68a;font-size:11px;color:#92400e;line-height:1.8;">
+      ※ 본 비교표는 설계 참고용이며 실제 보험료는 가입 조건에 따라 달라질 수 있습니다.<br>
+      ※ 자세한 내용은 담당 설계사에게 문의해 주세요.<br>
+      ※ 우리동네보험지킴이 · 최윤경 지점장 · WD WAVE 시스템
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ════════════════════════════════
+   비교표 JS
+════════════════════════════════ */
+
+function showCompareTable(){
+  // 현재 선택된 설계 확인
+  var designId = document.getElementById('is-design-select')?.value;
+  if(!designId){ alert('보험사선정 화면에서 설계를 먼저 선택해주세요'); return; }
+  if(!Object.keys(_IS.selections).length){ alert('항목별 보험사를 먼저 선택해주세요'); return; }
+
+  var designs = JSON.parse(localStorage.getItem(_DC_KEY)||'[]');
+  var d = designs.find(function(x){ return x.id===designId; });
+  if(!d){ alert('설계 데이터를 찾을 수 없어요'); return; }
+
+  // 화면 전환
+  var all = document.querySelectorAll('.scr');
+  all.forEach(function(el){ el.style.display='none'; });
+  var el = document.getElementById('compare-table');
+  if(el) el.style.display='block';
+  window.scrollTo(0,0);
+
+  renderCompareTable(d);
+}
+
+function renderCompareTable(d){
+  var today = new Date();
+  var dateStr = today.getFullYear()+'년 '+(today.getMonth()+1)+'월 '+today.getDate()+'일';
+
+  // 기본 정보
+  var titleEl = document.getElementById('ct-title');
+  if(titleEl) titleEl.textContent = d.custName+'님 보험 설계 비교표';
+  var dateEl = document.getElementById('ct-date');
+  if(dateEl) dateEl.textContent = dateStr;
+  var custEl = document.getElementById('ct-cust-name');
+  if(custEl) custEl.textContent = d.custName+'님';
+
+  // 비교표 테이블 생성
+  var tableWrap = document.getElementById('ct-table-wrap');
+  if(tableWrap){
+    var html = '<table style="width:100%;border-collapse:collapse;font-size:13px;">';
+
+    // 헤더
+    html += '<thead><tr style="background:#f9f8ff;">';
+    html += '<th style="padding:10px 12px;text-align:left;border-bottom:2px solid #4A3F7A;font-weight:800;color:#4A3F7A;min-width:80px;">보장항목</th>';
+    d.insurers.forEach(function(ins){
+      var isSelected = Object.values(_IS.selections).indexOf(ins) >= 0;
+      html += '<th style="padding:10px 12px;text-align:center;border-bottom:2px solid #4A3F7A;font-weight:800;color:'+(isSelected?'#059669':'#4A3F7A')+';min-width:100px;">'
+        +ins+(isSelected?' ✓':'')+'</th>';
+    });
+    html += '<th style="padding:10px 12px;text-align:center;border-bottom:2px solid #4A3F7A;font-weight:800;color:#15803d;min-width:100px;">선정</th>';
+    html += '</tr></thead><tbody>';
+
+    // 항목 행
+    d.items.forEach(function(item, idx){
+      var selectedIns = _IS.selections[item]||'';
+      var rowBg = idx%2===0?'#fff':'#fafafe';
+      html += '<tr style="background:'+rowBg+';">';
+      html += '<td style="padding:10px 12px;border-bottom:1px solid #f0f0f8;font-weight:700;color:#1A1A2E;">'+item+'</td>';
+
+      var prices = [];
+      d.insurers.forEach(function(ins){
+        var price = (d.prices[ins]&&d.prices[ins][item])||0;
+        prices.push(price);
+      });
+      var minPrice = Math.min.apply(null, prices.filter(function(p){return p>0;}));
+
+      d.insurers.forEach(function(ins){
+        var price = (d.prices[ins]&&d.prices[ins][item])||0;
+        var isMin = price > 0 && price === minPrice;
+        var isSelected = ins === selectedIns;
+        html += '<td style="padding:10px 12px;text-align:center;border-bottom:1px solid #f0f0f8;'
+          +'font-weight:'+(isSelected?'900':'500')+';'
+          +'color:'+(isSelected?'#059669':isMin?'#2563eb':'#374151')+';'
+          +'background:'+(isSelected?'#f0fdf4':'')+'">'
+          +(price?price.toLocaleString()+'원':(price===0&&d.prices[ins]?'-':'미입력'))
+          +(isMin&&!isSelected?' 💙':'')
+          +'</td>';
+      });
+
+      // 선정 결과
+      html += '<td style="padding:10px 12px;text-align:center;border-bottom:1px solid #f0f0f8;">';
+      if(selectedIns){
+        var selectedPrice = (d.prices[selectedIns]&&d.prices[selectedIns][item])||0;
+        html += '<div style="display:inline-block;background:#dcfce7;color:#15803d;padding:4px 10px;border-radius:10px;font-size:12px;font-weight:800;">'+selectedIns+'</div>';
+        if(selectedPrice) html += '<div style="font-size:11px;color:#15803d;margin-top:2px;font-weight:700;">'+selectedPrice.toLocaleString()+'원</div>';
+      } else {
+        html += '<span style="color:#94A3B8;font-size:12px;">미선정</span>';
+      }
+      html += '</td></tr>';
+    });
+
+    // 총합 행
+    html += '<tr style="background:#f0fdf4;">';
+    html += '<td style="padding:12px;font-weight:900;color:#15803d;border-top:2px solid #86efac;">총 보험료</td>';
+    d.insurers.forEach(function(ins){
+      var total = 0;
+      if(d.prices[ins]) Object.values(d.prices[ins]).forEach(function(v){total+=v||0;});
+      html += '<td style="padding:12px;text-align:center;font-weight:900;color:#15803d;border-top:2px solid #86efac;">'
+        +(total?total.toLocaleString()+'원':'-')+'</td>';
+    });
+    html += '<td style="padding:12px;border-top:2px solid #86efac;"></td>';
+    html += '</tr></tbody></table>';
+    tableWrap.innerHTML = html;
+  }
+
+  // 보험사별 총 보험료
+  var totalWrap = document.getElementById('ct-total-wrap');
+  if(totalWrap){
+    totalWrap.innerHTML = d.insurers.map(function(ins){
+      var total = 0;
+      if(d.prices[ins]) Object.values(d.prices[ins]).forEach(function(v){total+=v||0;});
+      var hasSelection = Object.values(_IS.selections).indexOf(ins) >= 0;
+      return '<div style="flex:1;min-width:120px;background:'+(hasSelection?'#dcfce7':'#f9f8ff')+';border-radius:12px;padding:14px;text-align:center;border:2px solid '+(hasSelection?'#86efac':'#E8E8F0')+'">'
+        +'<div style="font-size:12px;color:#6B7280;margin-bottom:4px;">'+ins+'</div>'
+        +'<div style="font-size:18px;font-weight:900;color:'+(hasSelection?'#15803d':'#4A3F7A')+'">'+(total?total.toLocaleString()+'원':'-')+'</div>'
+        +(hasSelection?'<div style="font-size:10px;color:#15803d;margin-top:3px;font-weight:700;">✓ 선정 포함</div>':'')
+        +'</div>';
+    }).join('');
+  }
+
+  // 선정 결과 요약
+  var selWrap = document.getElementById('ct-selection-wrap');
+  if(selWrap){
+    var finalTotal = 0;
+    selWrap.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;">'
+      + d.items.map(function(item){
+          var ins = _IS.selections[item]||'';
+          var price = ins?(d.prices[ins]&&d.prices[ins][item])||0:0;
+          if(price) finalTotal += price;
+          return '<div style="background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #86efac;">'
+            +'<div style="font-size:11px;color:#6B7280;margin-bottom:3px;">'+item+'</div>'
+            +'<div style="font-size:13px;font-weight:800;color:#1A1A2E;">'+(ins||'<span style="color:#94A3B8;">미선정</span>')+'</div>'
+            +(price?'<div style="font-size:11px;color:#059669;margin-top:2px;font-weight:700;">'+price.toLocaleString()+'원</div>':'')
+            +'</div>';
+        }).join('')
+      +'</div>';
+  }
+
+  // 최종 총액
+  var finalEl = document.getElementById('ct-final-total');
+  if(finalEl){
+    var total2 = 0;
+    Object.keys(_IS.selections).forEach(function(item){
+      var ins = _IS.selections[item];
+      var price = (d.prices[ins]&&d.prices[ins][item])||0;
+      total2 += price;
+    });
+    finalEl.textContent = total2.toLocaleString();
+  }
+
+  // 메모
+  var memoWrap = document.getElementById('ct-memo-wrap');
+  var memoText = document.getElementById('ct-memo-text');
+  if(d.memo && d.memo.trim()){
+    if(memoWrap) memoWrap.style.display='block';
+    if(memoText) memoText.textContent = d.memo;
+  } else {
+    if(memoWrap) memoWrap.style.display='none';
+  }
+}
+
+function printCompareTable(){
+  // 헤더바 숨기고 인쇄
+  var header = document.getElementById('compare-header-bar');
+  if(header) header.style.display='none';
+
+  // 인쇄 스타일 적용
+  var style = document.createElement('style');
+  style.id = 'print-style';
+  style.textContent = '@media print { body * { visibility: hidden; } #compare-print-area, #compare-print-area * { visibility: visible; } #compare-print-area { position: fixed; left: 0; top: 0; width: 100%; } }';
+  document.head.appendChild(style);
+
+  window.print();
+
+  // 복구
+  setTimeout(function(){
+    var ps = document.getElementById('print-style');
+    if(ps) ps.remove();
+    if(header) header.style.display='flex';
+  }, 1000);
+}
+
+window.showCompareTable = showCompareTable;
+window.printCompareTable = printCompareTable;
+</script>
+
 </body>
 </html>
   <!-- ══ 보험금 청구 탭 ══ -->
