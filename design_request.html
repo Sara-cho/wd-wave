@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 설계의뢰 | WD웨이브</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; background: #F1F5F9; color: #1E293B; }
+  .header { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); padding: 22px 24px 18px; }
+  .header-eyebrow { font-size: 11px; color: #6366F1; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  .header-title { font-size: 24px; font-weight: 900; color: #F8FAFC; margin-bottom: 4px; }
+  .header-sub { font-size: 13px; color: #94A3B8; }
+  .header-flow { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.07); }
+  .flow-pill { padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+  .flow-from { background: rgba(99,102,241,0.2); color: #A5B4FC; }
+  .flow-arrow { color: #475569; font-size: 16px; }
+  .flow-to { background: rgba(34,197,94,0.15); color: #86EFAC; }
+  .flow-spacer { flex: 1; }
+  .total-badge { background: #6366F1; color: white; padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 800; }
+  .content { max-width: 760px; margin: 0 auto; padding: 20px 16px 70px; }
+  .summary-row { display: flex; gap: 0; margin-bottom: 20px; background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .summary-cell { flex: 1; padding: 14px 16px; text-align: center; border-right: 1px solid #F1F5F9; }
+  .summary-cell:last-child { border-right: none; }
+  .summary-num { font-size: 26px; font-weight: 900; color: #1E293B; line-height: 1; }
+  .summary-num.purple { color: #6366F1; }
+  .summary-label { font-size: 11px; color: #94A3B8; font-weight: 600; margin-top: 4px; }
+  .company-block { margin-bottom: 16px; }
+  .company-title-bar { display: flex; align-items: center; gap: 10px; padding: 11px 16px; background: #1E293B; color: white; border-radius: 12px 12px 0 0; }
+  .company-name { font-size: 15px; font-weight: 800; flex: 1; }
+  .company-total-count { font-size: 13px; font-weight: 700; color: #A5B4FC; background: rgba(99,102,241,0.25); padding: 3px 12px; border-radius: 20px; }
+  .company-total-premium { font-size: 12px; font-weight: 700; color: #A78BFA; }
+  .product-row { background: white; border-left: 1px solid #E2E8F0; border-right: 1px solid #E2E8F0; padding: 14px 18px; border-bottom: 1px solid #F1F5F9; }
+  .product-row:last-child { border-bottom: 1px solid #E2E8F0; border-radius: 0 0 12px 12px; }
+  .product-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .product-accent { width: 4px; height: 18px; border-radius: 2px; flex-shrink: 0; }
+  .product-name { font-size: 14px; font-weight: 800; color: #1E293B; flex: 1; }
+  .product-count-badge { font-size: 13px; font-weight: 800; padding: 3px 12px; border-radius: 16px; }
+  .product-premium { font-size: 12px; font-weight: 700; color: #7C3AED; }
+  .name-list { display: flex; flex-wrap: wrap; gap: 7px; }
+  .name-chip { padding: 5px 13px; border-radius: 20px; font-size: 13px; font-weight: 700; background: #F8FAFC; color: #334155; border: 1px solid #E2E8F0; }
+  .name-chip.has-note { border-color: #C7D2FE; background: #EEF2FF; color: #4338CA; }
+  .note-area { margin-top: 10px; padding: 10px 14px; background: #F8FAFC; border-radius: 8px; border-left: 3px solid #6366F1; }
+  .note-item { font-size: 12px; color: #334155; line-height: 1.7; margin-bottom: 2px; }
+  .note-item:last-child { margin-bottom: 0; }
+  .note-name { font-weight: 800; color: #6366F1; }
+  .error-box { max-width: 480px; margin: 80px auto; background: white; border-radius: 16px; padding: 40px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+  .error-box .icon { font-size: 52px; margin-bottom: 16px; }
+  .error-box h2 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .error-box p { font-size: 13px; color: #64748B; line-height: 1.7; }
+  .footer { position: fixed; bottom: 0; left: 0; right: 0; background: #0F172A; color: #475569; padding: 9px 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; gap: 6px; }
+  .footer strong { color: #94A3B8; }
+  @media (max-width: 540px) { .summary-num { font-size: 20px; } .name-chip { font-size: 12px; padding: 4px 10px; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+(function(){
+  const root = document.getElementById('root');
+  let data = null, parseError = null;
+  try {
+    const hash = location.hash.replace('#','').trim();
+    if(!hash) throw new Error('데이터 없음');
+    data = JSON.parse(decodeURIComponent(escape(atob(hash))));
+  } catch(e){ parseError = e.message; }
+  if(parseError || !data){
+    root.innerHTML = '<div style="padding:20px;"><div class="error-box"><div class="icon">📋</div><h2>설계의뢰 내역을 불러올 수 없습니다</h2><p>링크가 만료되었거나 올바르지 않습니다.<br>담당 설계사에게 새 링크를 요청해주세요.</p></div></div>';
+    return;
+  }
+  const { date, from, filterCompany, groups } = data;
+  const byCompany = {};
+  Object.entries(groups||{}).forEach(([co, clients]) => {
+    if(!byCompany[co]) byCompany[co] = {};
+    (clients||[]).forEach(c => {
+      const pr = c.product || '기타';
+      if(!byCompany[co][pr]) byCompany[co][pr] = [];
+      byCompany[co][pr].push(c);
+    });
+  });
+  const companies = Object.keys(byCompany);
+  let grandTotal = 0, grandPremium = 0;
+  companies.forEach(co => Object.values(byCompany[co]).forEach(list => { grandTotal += list.length; list.forEach(c => { grandPremium += Number(c.designPremium)||0; }); }));
+  function productAccentColor(clients){ if(clients.some(c=>c.status==='체결완료')) return '#22C55E'; if(clients.some(c=>c.status==='터치완료')) return '#EF4444'; if(clients.some(c=>c.status==='설계완료')) return '#06B6D4'; return '#8B5CF6'; }
+  function productBadgeStyle(clients){ const col = productAccentColor(clients); return 'background:'+col+'22;color:'+col+';'; }
+  const titleLabel = filterCompany ? filterCompany+' 설계의뢰' : (date||'')+' 설계의뢰';
+  const headerHTML = '<div class="header"><div class="header-eyebrow">WD WAVE · 설계매니저 전달</div><div class="header-title">'+titleLabel+'</div><div class="header-sub">'+companies.length+'개사 · '+grandTotal+'명'+(grandPremium>0?' · 설계보험료 '+grandPremium.toLocaleString()+'원':'')+'</div><div class="header-flow"><span class="flow-pill flow-from">📤 '+(from||'설계사')+'</span><span class="flow-arrow">→</span><span class="flow-pill flow-to">📥 설계매니저</span><span class="flow-spacer"></span><span class="total-badge">'+grandTotal+'건</span></div></div>';
+  const summaryHTML = '<div class="summary-row"><div class="summary-cell"><div class="summary-num purple">'+grandTotal+'</div><div class="summary-label">총 의뢰 건수</div></div><div class="summary-cell"><div class="summary-num">'+companies.length+'</div><div class="summary-label">보험사 수</div></div><div class="summary-cell"><div class="summary-num">'+[...new Set(Object.values(byCompany).flatMap(p=>Object.keys(p)))].length+'</div><div class="summary-label">상품 종류</div></div><div class="summary-cell"><div class="summary-num" style="font-size:16px;padding-top:4px;">'+(grandPremium>0?grandPremium.toLocaleString():'-')+'</div><div class="summary-label">설계보험료(원)</div></div></div>';
+  let blocksHTML = '';
+  if(companies.length===0){ blocksHTML='<div style="text-align:center;padding:60px 20px;color:#94A3B8;">설계의뢰 내역이 없습니다.</div>'; }
+  else { companies.forEach(co => { const products=byCompany[co]; const prKeys=Object.keys(products); const coTotal=prKeys.reduce((s,pr)=>s+products[pr].length,0); const coPremium=prKeys.reduce((s,pr)=>s+products[pr].reduce((a,c)=>a+(Number(c.designPremium)||0),0),0); let prRowsHTML=''; prKeys.forEach(pr => { const list=products[pr]; const accent=productAccentColor(list); const badgeStyle=productBadgeStyle(list); const prPremium=list.reduce((s,c)=>s+(Number(c.designPremium)||0),0); const chipsHTML=list.map(c=>'<span class="name-chip'+(c.designNote?' has-note':'')+'" title="'+(c.designNote||'')+'">'+c.name+'</span>').join(''); const notedClients=list.filter(c=>c.designNote); const notesHTML=notedClients.length>0?'<div class="note-area">'+notedClients.map(c=>'<div class="note-item"><span class="note-name">'+c.name+'</span> — '+c.designNote+'</div>').join('')+'</div>':''; prRowsHTML+='<div class="product-row"><div class="product-header"><div class="product-accent" style="background:'+accent+';"></div><div class="product-name">'+pr+'</div><span class="product-count-badge" style="'+badgeStyle+'">'+list.length+'명</span>'+(prPremium>0?'<span class="product-premium">'+prPremium.toLocaleString()+'원</span>':'')+'</div><div class="name-list">'+chipsHTML+'</div>'+notesHTML+'</div>'; }); blocksHTML+='<div class="company-block"><div class="company-title-bar"><div class="company-name">🏢 '+co+'</div><span class="company-total-count">'+coTotal+'명</span>'+(coPremium>0?'<span class="company-total-premium">'+coPremium.toLocaleString()+'원</span>':'')+'</div>'+prRowsHTML+'</div>'; }); }
+  root.innerHTML = headerHTML+'<div class="content">'+summaryHTML+blocksHTML+'</div><div class="footer"><strong>WD WAVE</strong> · 설계매니저 전달용 업무문서 · '+(date||'')+'</div>';
+})();
+</script>
+</body>
+</html>
