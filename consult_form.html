@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WD WAVE | 간편 상담 신청</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/dist/umd/supabase.min.js"></script>
+<style>
+:root{--p:#4A3F7A;--pl:#6d5fa8;--pm:#8B7AB8;--bg:#F7F8FC;--border:#E8E8F0;--muted:#6B7280;--text:#1A1A2E;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Noto Sans KR",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;}
+.hd{background:linear-gradient(135deg,var(--p),var(--pl));padding:0 20px;height:56px;display:flex;align-items:center;gap:10px;}
+.hd-logo{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.hd-txt{font-size:16px;font-weight:800;color:#fff;}
+.hd-sub{font-size:11px;color:rgba(255,255,255,.7);margin-left:auto;}
+.wrap{max-width:520px;margin:0 auto;padding:20px 16px 48px;}
+.banner{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:16px;padding:16px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px;}
+.banner-ico{font-size:32px;flex-shrink:0;}
+.banner-txt{font-size:13px;font-weight:700;color:var(--p);line-height:1.6;}
+.banner-sub{font-size:11px;color:var(--pl);font-weight:500;margin-top:2px;}
+.card{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;}
+.card-title{font-size:12px;font-weight:800;color:#334155;margin-bottom:14px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.row2>*{margin-bottom:10px;}
+.row1{margin-bottom:10px;}
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;}
+.req{color:#ef4444;}
+.inp{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:"Noto Sans KR",sans-serif;outline:none;background:#fff;color:var(--text);transition:border-color .15s;}
+.inp:focus{border-color:var(--pm);}
+.inp::placeholder{color:#cbd5e1;}
+select.inp{cursor:pointer;}
+textarea.inp{resize:vertical;min-height:80px;}
+.purpose-group{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px;}
+.purpose-btn{padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:#fff;color:var(--muted);font-family:"Noto Sans KR",sans-serif;transition:all .15s;}
+.purpose-btn.on{background:var(--p);color:#fff;border-color:var(--p);}
+.agree-box{background:#f8f9ff;border:1px solid #c7d2fe;border-radius:10px;padding:13px 15px;margin-bottom:18px;display:flex;align-items:flex-start;gap:10px;}
+.agree-box input{width:16px;height:16px;margin-top:2px;accent-color:var(--p);flex-shrink:0;cursor:pointer;}
+.agree-box label{font-size:11px;color:#475569;line-height:1.75;cursor:pointer;}
+.agree-req{font-weight:800;color:var(--p);}
+.submit-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:800;cursor:pointer;font-family:"Noto Sans KR",sans-serif;letter-spacing:.02em;}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+#done-view{display:none;}
+.done-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:44px 28px;text-align:center;margin-bottom:16px;}
+.done-ico{font-size:64px;margin-bottom:18px;}
+.done-title{font-size:20px;font-weight:800;color:var(--p);margin-bottom:8px;}
+.done-sub{font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:20px;}
+.done-badge{display:inline-block;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;}
+.done-badge-new{background:#f3e8ff;color:#7c3aed;border:1px solid #d8b4fe;}
+.done-badge-exist{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;}
+.done-info{background:#f8f9ff;border-radius:12px;padding:14px 16px;text-align:left;margin-bottom:20px;}
+.done-info-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px;}
+.done-info-row:last-child{border:none;}
+.done-info-label{color:var(--muted);font-weight:600;}
+.done-info-val{color:var(--text);font-weight:700;}
+.done-contact{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;}
+.done-contact-ico{font-size:24px;flex-shrink:0;}
+.done-contact-txt{font-size:12px;color:var(--p);font-weight:600;line-height:1.6;}
+.err-msg{font-size:11px;color:#ef4444;margin-top:4px;display:none;}
+.footer{text-align:center;font-size:11px;color:#cbd5e1;margin-top:24px;}
+.footer a{color:var(--pl);text-decoration:none;}
+@media(max-width:400px){.row2{grid-template-columns:1fr;}.banner{flex-direction:column;text-align:center;}}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div class="hd-logo">🌊</div>
+  <div class="hd-txt">WD WAVE</div>
+  <div class="hd-sub">우리동네보험지킴이</div>
+</div>
+
+<div id="form-view">
+<div class="wrap">
+  <div class="banner">
+    <div class="banner-ico">🙋‍♀️</div>
+    <div>
+      <div class="banner-txt">간편 상담 신청</div>
+      <div class="banner-sub">아래 내용을 입력하시면 담당 FP가 빠르게 연락드립니다</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 기본 정보</div>
+    <div class="row2">
+      <div class="fld"><label>고객명 <span class="req">*</span></label><input class="inp" id="f-name" type="text" placeholder="홍길동"></div>
+      <div class="fld"><label>연락처 <span class="req">*</span></label><input class="inp" id="f-phone" type="tel" placeholder="010-0000-0000"></div>
+      <div class="fld"><label>직업</label>
+        <select class="inp" id="f-job">
+          <option value="">선택 안 함</option>
+          <option>직장인</option><option>자영업</option><option>공무원</option>
+          <option>전문직</option><option>주부</option><option>학생</option><option>기타</option>
+        </select>
+      </div>
+      <div class="fld"><label>거주 지역</label><input class="inp" id="f-address" type="text" placeholder="예: 서울 광진구"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">💬 상담 내용</div>
+    <div class="fld row1">
+      <label>상담 목적 <span class="req">*</span></label>
+      <div class="purpose-group">
+        <button type="button" class="purpose-btn" onclick="selectPurpose(this)">보장분석 요청</button>
+        <button type="button" class="purpose-btn" onclick="selectPurpose(this)">보험 가입 상담</button>
+        <button type="button" class="purpose-btn" onclick="selectPurpose(this)">기존 보험 점검</button>
+        <button type="button" class="purpose-btn" onclick="selectPurpose(this)">보험금 청구 문의</button>
+        <button type="button" class="purpose-btn" onclick="selectPurpose(this)">기타 문의</button>
+      </div>
+      <input type="hidden" id="f-purpose-hidden">
+      <div class="err-msg" id="err-purpose">상담 목적을 선택해주세요</div>
+    </div>
+    <div class="fld">
+      <label>문의 내용</label>
+      <textarea class="inp" id="f-content" placeholder="궁금하신 내용이나 현재 상황을 자유롭게 작성해 주세요."></textarea>
+    </div>
+  </div>
+  <div class="agree-box">
+    <input type="checkbox" id="f-agree">
+    <label for="f-agree">
+      <span class="agree-req">[필수]</span> 수집된 개인정보는 상담 목적으로만 사용되며, 상담 완료 후 요청 시 즉시 삭제됩니다.
+    </label>
+  </div>
+  <button class="submit-btn" id="submit-btn" onclick="submitForm()">🙋 상담 신청하기</button>
+  <div class="footer">WD WAVE | 우리동네보험지킴이 &nbsp;·&nbsp; 문의 <a href="tel:010-6396-9896">010-6396-9896</a></div>
+</div>
+</div>
+
+<div id="done-view">
+<div class="wrap">
+  <div class="done-card">
+    <div class="done-ico">✅</div>
+    <div class="done-title">상담 신청 완료!</div>
+    <div class="done-sub">빠른 시일 내에 담당 FP가<br>연락 드리겠습니다 😊</div>
+    <div id="done-cust-badge"></div>
+    <div class="done-info" id="done-info-box"></div>
+    <div class="done-contact">
+      <div class="done-contact-ico">💬</div>
+      <div class="done-contact-txt">
+        급하신 경우 카카오톡 채널이나<br>전화로 직접 연락 주세요<br>
+        <strong>📞 010-6396-9896</strong>
+      </div>
+    </div>
+  </div>
+  <div class="footer">WD WAVE | 우리동네보험지킴이</div>
+</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// WD WAVE consult_form.html — 실제 컬럼 자동 감지 후 저장
+// ══════════════════════════════════════════════════════════
+
+var SUPA_URL = 'https://mzftzadtoepcrwhnwdmn.supabase.co';
+var SUPA_KEY = 'sb_publishable_rp4QHXzXMgnxKmKL0QERAw_cKX0dSgh';
+var _supa = null;
+(function(){
+  try{
+    if(typeof supabase !== 'undefined' && supabase.createClient){
+      _supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+      console.log('[CF] Supabase 초기화 완료');
+    }
+  }catch(e){ console.error('[CF] Supabase 초기화 실패:', e.message); }
+})();
+
+var DBK    = 'wdcare_v40s4';
+var CRKEY  = 'wd_cr_list';
+var WCMKEY = 'wd_wcm3';
+var TDOKEY = 'wd_todos';
+
+function normPh(p){ return (p||'').replace(/\D/g,''); }
+function gdb(){ try{return JSON.parse(localStorage.getItem(DBK)||'{"customers":[]}')}catch(e){return{customers:[]};} }
+function sdb(d){ try{localStorage.setItem(DBK,JSON.stringify(d));}catch(e){} }
+
+function selectPurpose(btn){
+  document.querySelectorAll('.purpose-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  document.getElementById('f-purpose-hidden').value = btn.textContent;
+  document.getElementById('err-purpose').style.display = 'none';
+}
+
+// ══════════════════════════════════════════════════════════
+// 실제 테이블 컬럼명 감지 (SELECT * LIMIT 1 → 키 확인)
+// ══════════════════════════════════════════════════════════
+var _tableSchemas = {};  // 캐시
+
+async function detectCols(tableName){
+  if(_tableSchemas[tableName]) return _tableSchemas[tableName];
+  try{
+    var r = await _supa.from(tableName).select('*').limit(1);
+    if(r.error){
+      console.warn('[CF] 컬럼 감지 실패 ('+tableName+'):', r.error.message);
+      return null;
+    }
+    var cols = null;
+    if(r.data && r.data.length > 0){
+      cols = Object.keys(r.data[0]);
+    } else {
+      // 데이터 없을 때 → 빈 INSERT로 컬럼 오류 유발해서 컬럼명 파악 불가
+      // PostgREST OpenAPI 스펙 활용
+      var specRes = await fetch(SUPA_URL+'/rest/v1/', {
+        headers:{'apikey':SUPA_KEY,'Accept':'application/openapi+json'}
+      });
+      if(specRes.ok){
+        var spec = await specRes.json();
+        var tblDef = spec && spec.definitions && spec.definitions[tableName];
+        if(tblDef && tblDef.properties){
+          cols = Object.keys(tblDef.properties);
+        }
+      }
+    }
+    if(cols){
+      _tableSchemas[tableName] = cols;
+      console.log('[CF] 컬럼 감지 성공 ('+tableName+'):', cols.join(', '));
+    }
+    return cols;
+  }catch(e){
+    console.warn('[CF] 컬럼 감지 예외 ('+tableName+'):', e.message);
+    return null;
+  }
+}
+
+// 컬럼 목록에서 존재하는 키만 남겨 payload 필터링
+function filterPayload(payload, cols){
+  if(!cols) return payload; // 컬럼 감지 실패 시 그대로 전송
+  var filtered = {};
+  cols.forEach(function(col){
+    // 대소문자 무시하고 일치하는 키 찾기
+    var found = Object.keys(payload).find(function(k){
+      return k.toLowerCase() === col.toLowerCase() || k === col;
+    });
+    if(found !== undefined) filtered[col] = payload[found];
+  });
+  return filtered;
+}
+
+// ══════════════════════════════════════════════════════════
+// 기존 고객 판별
+// ══════════════════════════════════════════════════════════
+async function findExistingCust(np){
+  if(!np) return null;
+  if(_supa){
+    try{
+      var r = await _supa.from('customers').select('id,name,data').eq('phone', np).limit(1);
+      if(!r.error && r.data && r.data.length){
+        console.log('[CF] 기존고객(Supabase):', r.data[0].id);
+        return r.data[0];
+      }
+    }catch(e){ console.warn('[CF] 기존고객 검색 실패:', e.message); }
+  }
+  var db = gdb();
+  for(var i=0; i<db.customers.length; i++){
+    var c = db.customers[i];
+    var cd = (c.data && c.data.customer) || {};
+    if(normPh(cd.phone || c.phone || '') === np){
+      console.log('[CF] 기존고객(로컬):', c.id);
+      return {id:c.id, data:c.data, name:c.name};
+    }
+  }
+  return null;
+}
+
+// ══════════════════════════════════════════════════════════
+// 메인 흐름 — 컬럼 자동 감지 후 순차 저장
+// ══════════════════════════════════════════════════════════
+async function cfFullFlow(custName, phone, job, address, purpose, content){
+  var now      = new Date().toISOString();
+  var todayStr = now.split('T')[0];
+  var np       = normPh(phone);
+  var nd       = new Date(todayStr); nd.setDate(nd.getDate()+2);
+  var nextStr  = nd.toISOString().split('T')[0];
+  var crId     = 'CR_' + Date.now();
+
+  console.log('[CF] ===== cfFullFlow 시작 =====');
+  console.log('[CF] custName:', custName, '| phone:', phone);
+
+  // STEP 1: 기존 고객 판별
+  console.log('[CF] STEP 1: 기존고객 판별');
+  var existing   = await findExistingCust(np);
+  var isExisting = !!existing;
+  var custId     = isExisting ? existing.id : ('CUST_' + Date.now());
+  console.log('[CF] STEP 1 완료 | isExisting:', isExisting, '| custId:', custId);
+
+  // custDataJsonb 구조
+  var custDataJsonb = isExisting ? (existing.data||{}) : {
+    id: custId,
+    customer: {
+      name: custName, phone: phone, job: job||'', address: address||'',
+      regdate: todayStr, birth: '', gender: '', note: '[간편상담폼 자동등록]'
+    },
+    consult:{}, kb:{}, gate:{g1:false,g2:false,g3:false},
+    clientType:'', journal:{call:'',kakao:'',touches:[],jStatus:'',nextAction:'',unclaim:''},
+    extra:{}, touches:[], designRequests:[], callLogs:[], ca_history:[], savedAt:now
+  };
+
+  // STEP 2: customers INSERT/UPDATE
+  console.log('[CF] STEP 2: customers', isExisting?'UPDATE':'INSERT', '시작');
+  if(_supa){
+    if(!isExisting){
+      var cusPayload = {
+        id:custId, name:custName, birth_date:null,
+        phone:np, status:'S', next_action:null,
+        last_touch_at:now, owner:'최윤경', owner_id:'kfcyk50',
+        source:'consult_form', data:custDataJsonb
+      };
+      try{
+        var r = await _supa.from('customers').insert(cusPayload);
+        if(r.error) console.error('[CF] STEP 2 실패:', r.error.message);
+        else        console.log('[CF] STEP 2 완료 customers INSERT');
+      }catch(e){ console.error('[CF] STEP 2 예외:', e.message); }
+    } else {
+      try{
+        var er = await _supa.from('customers').select('data').eq('id',custId).single();
+        var ed = (!er.error && er.data) ? (er.data.data||{}) : {};
+        if(!ed.touches) ed.touches=[];
+        var ur = await _supa.from('customers').update({last_touch_at:now,data:ed}).eq('id',custId);
+        if(ur.error) console.error('[CF] STEP 2 UPDATE 실패:', ur.error.message);
+        else         console.log('[CF] STEP 2 완료 customers UPDATE');
+      }catch(e){ console.error('[CF] STEP 2 UPDATE 예외:', e.message); }
+    }
+  }
+
+  // STEP 3: simple_consult_requests INSERT (컬럼 자동 감지)
+  console.log('[CF] STEP 3: simple_consult_requests INSERT 시작');
+  if(_supa){
+    // 전체 후보 payload (camelCase + snake_case 모두 포함)
+    var crFull = {
+      id:            crId,
+      customer_id:   custId,
+      customerid:    custId,
+      customer_name: custName,
+      customername:  custName,
+      name:          custName,
+      phone:         phone,
+      job:           job||'',
+      address:       address||'',
+      purpose:       purpose||'',
+      types:         purpose||'',
+      message:       content||'',
+      status:        '신규',
+      is_existing:   isExisting,
+      isexisting:    isExisting,
+      created_at:    now,
+      createdat:     now
+    };
+    var crCols = await detectCols('simple_consult_requests');
+    var crPayload = filterPayload(crFull, crCols);
+    console.log('[CF] STEP 3 payload keys:', Object.keys(crPayload).join(', '));
+    try{
+      var crR = await _supa.from('simple_consult_requests').insert(crPayload);
+      if(crR.error) console.error('[CF] STEP 3 실패:', crR.error.message);
+      else          console.log('[CF] STEP 3 완료 simple_consult_requests INSERT');
+    }catch(e){ console.error('[CF] STEP 3 예외:', e.message); }
+  }
+
+  // STEP 4: tasks INSERT (컬럼 자동 감지)
+  console.log('[CF] STEP 4: tasks INSERT 시작');
+  if(_supa){
+    var taskFull = {
+      id:            'WCT_' + Date.now(),
+      type:          '신규 상담 신청',
+      custid:        custId,
+      custId:        custId,
+      customer_id:   custId,
+      custname:      custName,
+      custName:      custName,
+      customer_name: custName,
+      content:       custName + ' | ' + (purpose||'상담 신청'),
+      done:          false,
+      coops:         [],
+      raw:           '',
+      createdat:     now,
+      createdAt:     now,
+      created_at:    now,
+      crid:          crId,
+      crId:          crId,
+      cr_id:         crId,
+      source:        'consult_form',
+      date:          todayStr
+    };
+    var taskCols = await detectCols('tasks');
+    var taskPayload = filterPayload(taskFull, taskCols);
+    console.log('[CF] STEP 4 payload keys:', Object.keys(taskPayload).join(', '));
+    try{
+      var tR = await _supa.from('tasks').insert(taskPayload);
+      if(tR.error) console.error('[CF] STEP 4 실패:', tR.error.message);
+      else         console.log('[CF] STEP 4 완료 tasks INSERT');
+    }catch(e){ console.error('[CF] STEP 4 예외:', e.message); }
+  }
+
+  // STEP 5: customer_touch INSERT (컬럼 자동 감지)
+  console.log('[CF] STEP 5: customer_touch INSERT 시작');
+  if(_supa){
+    var touchFull = {
+      id:           'CT_' + Date.now(),
+      customer_id:  custId,
+      customerid:   custId,
+      date:         todayStr,
+      type:         '간편상담폼',
+      summary:      purpose||'',
+      sum:          purpose||'',
+      status:       '요청',
+      next_date:    nextStr,
+      nextdate:     nextStr,
+      memo:         content||'',
+      note:         content||'',
+      content:      content||'',
+      source:       'consult_form',
+      cr_id:        crId,
+      crid:         crId,
+      crId:         crId,
+      created_at:   now,
+      createdat:    now
+    };
+    var touchCols = await detectCols('customer_touch');
+    var touchPayload = filterPayload(touchFull, touchCols);
+    console.log('[CF] STEP 5 payload keys:', Object.keys(touchPayload).join(', '));
+    try{
+      var ctR = await _supa.from('customer_touch').insert(touchPayload);
+      if(ctR.error) console.error('[CF] STEP 5 실패:', ctR.error.message);
+      else          console.log('[CF] STEP 5 완료 customer_touch INSERT');
+    }catch(e){ console.error('[CF] STEP 5 예외:', e.message); }
+  }
+
+  // STEP 6: localStorage 캐시
+  console.log('[CF] STEP 6: localStorage 캐시 저장');
+  var touchLocal   = {date:todayStr,type:'간편상담폼',sum:purpose||'',status:'요청',
+    nextDate:nextStr,next:nextStr,memo:content||'',createdAt:now,source:'consult_form',crId:crId};
+  var consultLocal = {date:todayStr,type:'상담내역',
+    sum:'[상담요청] '+(purpose||'상담신청'),status:'대기',next:'',
+    purpose:purpose||'',monthly:'',memo:content||'',createdAt:now,source:'상담요청',crId:crId};
+  var db = gdb(); if(!db.customers) db.customers=[];
+  if(!isExisting){
+    custDataJsonb.touches.unshift(consultLocal); custDataJsonb.touches.unshift(touchLocal);
+    db.customers.unshift({id:custId,name:custName,status:'S',updatedAt:now,last_touch_at:now,source:'consult_form',data:custDataJsonb});
+  } else {
+    for(var j=0;j<db.customers.length;j++){
+      if(db.customers[j].id===custId){
+        var d2=db.customers[j].data||{}; if(!d2.touches) d2.touches=[];
+        d2.touches.unshift(consultLocal); d2.touches.unshift(touchLocal);
+        db.customers[j].data=d2; db.customers[j].last_touch_at=now; db.customers[j].updatedAt=now; break;
+      }
+    }
+  }
+  sdb(db);
+  try{
+    var crList=JSON.parse(localStorage.getItem(CRKEY)||'[]');
+    crList.unshift({id:crId,type:'상담요청',createdAt:now,name:custName,phone:phone,
+      job:job||'',address:address||'',purpose:purpose||'',content:content||'',
+      isExisting:isExisting,custId:custId,status:'신규'});
+    localStorage.setItem(CRKEY,JSON.stringify(crList));
+  }catch(e){}
+  try{
+    var wcmAll=JSON.parse(localStorage.getItem(WCMKEY)||'{}');
+    var wd=wcmAll[todayStr]||{date:todayStr,tasks:[]};
+    if(!wd.tasks) wd.tasks=[];
+    wd.tasks.unshift({id:'WCT_'+Date.now(),type:'신규 상담 신청',
+      custId:custId,custName:custName,content:custName+' | '+(purpose||'상담 신청'),
+      done:false,createdAt:now,crId:crId,source:'consult_form',coops:[]});
+    wcmAll[todayStr]=wd; localStorage.setItem(WCMKEY,JSON.stringify(wcmAll));
+  }catch(e){}
+  try{
+    var todos=JSON.parse(localStorage.getItem(TDOKEY)||'[]');
+    if(!todos.some(function(t){return t.crId===crId;})){
+      todos.push({id:'TODO_'+Date.now(),cid:custId,name:custName,
+        category:'new',text:'신규 상담 신청',is_done:false,date:todayStr,source:'consult_form',crId:crId});
+      localStorage.setItem(TDOKEY,JSON.stringify(todos));
+    }
+  }catch(e){}
+
+  console.log('[CF] ===== cfFullFlow 완료 ===== custId:', custId, '| crId:', crId);
+  return {crId:crId, custId:custId, isExisting:isExisting};
+}
+
+// ══════════════════════════════════════════════════════════
+// 폼 제출
+// ══════════════════════════════════════════════════════════
+async function submitForm(){
+  var custName = (document.getElementById('f-name').value    ||'').trim();
+  var phone    = (document.getElementById('f-phone').value   ||'').trim();
+  var purpose  = (document.getElementById('f-purpose-hidden').value||'').trim();
+  var agree    = document.getElementById('f-agree').checked;
+  var job      = document.getElementById('f-job').value      ||'';
+  var address  = (document.getElementById('f-address').value ||'').trim();
+  var content  = (document.getElementById('f-content').value ||'').trim();
+
+  console.log('[CF] submitForm | custName:', custName, '| phone:', phone);
+  if(!custName){ alert('이름을 입력해주세요'); return; }
+  if(!normPh(phone)){ alert('연락처를 입력해주세요'); return; }
+  if(!purpose){ document.getElementById('err-purpose').style.display='block'; return; }
+  if(!agree){ alert('개인정보 수집·이용에 동의해주세요'); return; }
+
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=true; btn.textContent='⏳ 접수 중...';
+  try{
+    var result=await cfFullFlow(custName,phone,job,address,purpose,content);
+    showDone(custName,phone,purpose,result.isExisting);
+  }catch(e){
+    console.error('[CF] submitForm 예외:', e.message, e.stack||'');
+    alert('오류: '+e.message);
+    btn.disabled=false; btn.textContent='🙋 상담 신청하기';
+  }
+}
+
+function showDone(custName,phone,purpose,isExisting){
+  document.getElementById('form-view').style.display='none';
+  document.getElementById('done-view').style.display='block';
+  window.scrollTo(0,0);
+  document.getElementById('done-cust-badge').innerHTML=isExisting
+    ?'<span class="done-badge done-badge-exist">기존 고객 연결됨</span>'
+    :'<span class="done-badge done-badge-new">신규 고객으로 등록됨</span>';
+  var n=new Date();
+  var dt=n.getFullYear()+'.'+String(n.getMonth()+1).padStart(2,'0')+'.'+String(n.getDate()).padStart(2,'0')
+    +' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+  document.getElementById('done-info-box').innerHTML=
+    '<div class="done-info-row"><span class="done-info-label">고객명</span><span class="done-info-val">'+custName+'</span></div>'+
+    '<div class="done-info-row"><span class="done-info-label">연락처</span><span class="done-info-val">'+phone+'</span></div>'+
+    '<div class="done-info-row"><span class="done-info-label">상담 목적</span><span class="done-info-val">'+purpose+'</span></div>'+
+    '<div class="done-info-row"><span class="done-info-label">접수 상태</span><span class="done-info-val" style="color:#92400e;">신규접수</span></div>'+
+    '<div class="done-info-row"><span class="done-info-label">접수 일시</span><span class="done-info-val">'+dt+'</span></div>';
+}
+</script>
+</body>
+</html>
